@@ -3,24 +3,103 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-      spacing="20" alignment="CENTER" prefHeight="800.0" prefWidth="1200.0">
-    
-    <padding>
-        <Insets top="50.0" bottom="50.0" left="50.0" right="50.0"/>
-    </padding>
-    
-    <Text text="Manager Dashboard" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
-    <Text text="Welcome Manager! Inventory management access" style="-fx-font-size: 16; -fx-fill: #666;"/>
-    
-    <VBox spacing="15" alignment="CENTER">
-        <Button text="Inventory Management" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="Purchase Orders" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="Supplier Returns" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="View Reports" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="Logout" prefWidth="200" prefHeight="50" 
-                style="-fx-font-size: 14; -fx-background-color: #ff4444; -fx-text-fill: white;"/>
-    </VBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.ManagerDashboardController"
+            styleClass="@dashboard.css">
+
+    <!-- HEADER -->
+    <top>
+        <HBox styleClass="header-container" alignment="CENTER" spacing="20">
+            <HBox styleClass="header-left" HBox.hgrow="ALWAYS">
+                <Label text="📦" styleClass="logo-icon"/>
+                <Label text=" Ventorio" styleClass="logo-label">
+                    <padding>
+                        <Insets left="5"/>
+                    </padding>
+                </Label>
+            </HBox>
+
+            <HBox styleClass="header-center" HBox.hgrow="ALWAYS">
+                <HBox styleClass="search-box" alignment="CENTER_LEFT">
+                    <Label text="🔍" style="-fx-text-fill: #9ca3af; -fx-padding: 0 5 0 0;"/>
+                    <TextField fx:id="searchField" promptText="Search" styleClass="search-field"
+                               prefWidth="350" onAction="#handleSearch"/>
+                </HBox>
+            </HBox>
+
+            <HBox styleClass="header-right" HBox.hgrow="ALWAYS">
+                <Button onAction="#handleSettings" styleClass="icon-button">
+                    <graphic>
+                        <Label text="⚙️" style="-fx-font-size: 18px;"/>
+                    </graphic>
+                </Button>
+
+                <StackPane onMouseClicked="#handleNotifications" styleClass="icon-button">
+                    <Label text="🔔" style="-fx-font-size: 18px;"/>
+                    <StackPane styleClass="notification-badge" translateX="10" translateY="-10">
+                        <Label text="3" styleClass="badge-text"/>
+                    </StackPane>
+                </StackPane>
+
+                <HBox styleClass="user-profile" spacing="12" onMouseClicked="#handleProfile">
+                    <VBox alignment="CENTER_RIGHT" spacing="2">
+                        <Label fx:id="userNameLabel" styleClass="user-name"/>
+                        <Label fx:id="userRoleLabel" styleClass="user-role"/>
+                    </VBox>
+                    <StackPane styleClass="profile-pic">
+                        <Label text="M" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Label text="▼" style="-fx-font-size: 10px; -fx-text-fill: #9ca3af;"/>
+                </HBox>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- SIDEBAR -->
+    <left>
+        <VBox styleClass="sidebar">
+            <VBox spacing="5">
+                <HBox styleClass="sidebar-item" onMouseClicked="#handleDashboardClick">
+                    <Label text="📊" styleClass="sidebar-icon"/>
+                    <Label text="Dashboard" styleClass="sidebar-item-text"/>
+                </HBox>
+
+                <HBox styleClass="sidebar-item, sidebar-item-active" onMouseClicked="#handleInventoryClick">
+                    <Label text="📦" styleClass="sidebar-icon"/>
+                    <Label text="Inventory" styleClass="sidebar-item-text"/>
+                </HBox>
+
+                <HBox styleClass="sidebar-item" onMouseClicked="#handlePurchaseOrdersClick">
+                    <Label text="🛒" styleClass="sidebar-icon"/>
+                    <Label text="Purchase Orders" styleClass="sidebar-item-text"/>
+                </HBox>
+
+                <HBox styleClass="sidebar-item" onMouseClicked="#handleSupplierReturnsClick">
+                    <Label text="↩️" styleClass="sidebar-icon"/>
+                    <Label text="Supplier Returns" styleClass="sidebar-item-text"/>
+                </HBox>
+
+                <HBox styleClass="sidebar-item" onMouseClicked="#handleAdjustStockClick">
+                    <Label text="⚖️" styleClass="sidebar-icon"/>
+                    <Label text="Adjust Stock Levels" styleClass="sidebar-item-text"/>
+                </HBox>
+
+                <HBox styleClass="sidebar-item" onMouseClicked="#handleProductTrackingClick">
+                    <Label text="📍" styleClass="sidebar-icon"/>
+                    <Label text="Product Tracking" styleClass="sidebar-item-text"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- MAIN CONTENT AREA -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+            <VBox fx:id="contentContainer" styleClass="content-area">
+                <!-- Content will be dynamically loaded here -->
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
