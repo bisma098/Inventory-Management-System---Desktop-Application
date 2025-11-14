@@ -42,3 +42,4 @@ public class User {
         System.out.println("Contact: " + contactInfo);
     }
 }
+

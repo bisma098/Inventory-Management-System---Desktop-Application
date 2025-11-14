@@ -5,22 +5,53 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-      spacing="20" alignment="CENTER" prefHeight="800.0" prefWidth="1200.0">
-    
-    <padding>
-        <Insets top="50.0" bottom="50.0" left="50.0" right="50.0"/>
-    </padding>
-    
-    <Text text="Admin Dashboard" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
-    <Text text="Welcome Administrator! Full system access" style="-fx-font-size: 16; -fx-fill: #666;"/>
-    
-    <VBox spacing="15" alignment="CENTER">
-        <Button text="Manage Products" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="Manage Users" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="View Reports" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="System Settings" prefWidth="200" prefHeight="50" style="-fx-font-size: 14;"/>
-        <Button text="Logout" prefWidth="200" prefHeight="50" 
-                style="-fx-font-size: 14; -fx-background-color: #ff4444; -fx-text-fill: white;"/>
-    </VBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefHeight="800.0" prefWidth="1200.0"
+            stylesheets="@dashboard.css">
+
+    <!-- ========== SIDEBAR ========== -->
+    <left>
+        <fx:include source="AdminSidebar.fxml" />
+    </left>
+
+    <!-- ========== HEADER ========== -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <Label text="JoyBox IMS" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS" />
+           
+        </HBox>
+    </top>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT" styleClass="dashboard-content">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Overview" styleClass="section-title"/>
+
+            <!-- Quick Stats -->
+            <HBox spacing="20">
+                <VBox styleClass="stat-card">
+                    <Label text="Total Products" styleClass="stat-label"/>
+                    <Label text="1,248" styleClass="stat-value"/>
+                </VBox>
+
+                <VBox styleClass="stat-card">
+                    <Label text="Low Stock Items" styleClass="stat-label"/>
+                    <Label text="12" styleClass="stat-value"/>
+                </VBox>
+
+                <VBox styleClass="stat-card">
+                    <Label text="Out of Stock" styleClass="stat-label"/>
+                    <Label text="3" styleClass="stat-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Placeholder for Table or Dynamic Data -->
+        </VBox>
+    </center>
+</BorderPane>
