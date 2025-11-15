@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
@@ -25,12 +26,6 @@
         <Button text="🏠 Inventory" fx:id="btnInventory" styleClass="nav-btn" onAction="#showInventory"/>
         <Button text="🧾 Sales Order" fx:id="btnSalesOrder" styleClass="nav-btn" onAction="#showSalesOrder"/>
         <Button text="↩ Customer Returns" fx:id="btnCustomerReturns" styleClass="nav-btn" onAction="#showCustomerReturns"/>
-    </VBox>
-
-    <!-- LOGOUT -->
-    <VBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
-        <Separator/>
-        <Button text="🚪 Logout" fx:id="btnLogout" styleClass="logout-btn" onAction="#handleLogout"/>
     </VBox>
 
 </VBox>
