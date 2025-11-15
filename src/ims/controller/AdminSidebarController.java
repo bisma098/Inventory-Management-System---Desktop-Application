@@ -2,57 +2,21 @@ package ims.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-<<<<<<< Updated upstream
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-=======
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import java.io.IOException;
->>>>>>> Stashed changes
 
 public class AdminSidebarController {
 
     @FXML
-<<<<<<< Updated upstream
-    private VBox sidebar;
-
-    @FXML
-    private Button btnInventory;
-
-    @FXML
-    private Button btnReports;
-
-    @FXML
-    private Button btnUserActivity;
-
-    @FXML
-    private Button btnAuditLog;
-
-    @FXML
-    private Button btnCategories;
-
-    @FXML
-    private Button btnProductTracking;
-
-    @FXML
-    private Button btnUsers;
-=======
     private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers;
->>>>>>> Stashed changes
 
     // ================== EVENT HANDLERS ==================
 
     @FXML
-<<<<<<< Updated upstream
-    private void showInventory(ActionEvent event) {
-        System.out.println("Navigating to Inventory...");
-        // TODO: Load Inventory view (AdminDashboardController.loadView("Inventory.fxml"))
-=======
     private void showInventory() {
         loadContent("/ims/view/Inventory.fxml");
->>>>>>> Stashed changes
     }
 
     @FXML
@@ -90,9 +54,6 @@ public class AdminSidebarController {
         System.out.println("Navigating to Users...");
         // TODO: Load Users management view
     }
-<<<<<<< Updated upstream
-}
-=======
      private void loadContent(String fxmlPath) {
         try {
             BorderPane parentBorderPane = getParentBorderPane();
@@ -129,4 +90,3 @@ public class AdminSidebarController {
         });
     }
 }
->>>>>>> Stashed changes
