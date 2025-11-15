@@ -7,16 +7,18 @@ public class Product {
     private String name;
     private String SKU;
     private double price;
+    private int quantity;
     private LocalDate expiryDate;
-    private int supplierId;
+    private Category category;
 
-    public Product(int productId, String name, String SKU, double price, LocalDate expiryDate, int supplierId) {
+    public Product(int productId, String name, String SKU, double price, int quantity, LocalDate expiryDate, Category category) {
         this.productId = productId;
         this.name = name;
         this.SKU = SKU;
         this.price = price;
+        this.quantity = quantity;
         this.expiryDate = expiryDate;
-        this.supplierId = supplierId;
+        this.category = category;
     }
 
     // Getters and Setters
@@ -32,11 +34,14 @@ public class Product {
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
 
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
     public LocalDate getExpiryDate() { return expiryDate; }
     public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
 
-    public int getSupplierId() { return supplierId; }
-    public void setSupplierId(int supplierId) { this.supplierId = supplierId; }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     // Methods
     public void addProduct() {
@@ -49,13 +54,5 @@ public class Product {
 
     public void deleteProduct() {
         System.out.println("Product deleted: " + name);
-    }
-
-    public void searchProduct(String query) {
-        System.out.println("Searching product: " + query);
-    }
-
-    public double getUnitPrice() {
-        return price;
     }
 }

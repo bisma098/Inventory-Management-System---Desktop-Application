@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.StaffSidebarController"
+      stylesheets="@sidebar.css"
+      styleClass="sidebar"
+      alignment="TOP_CENTER"
+      spacing="10"
+      prefWidth="200">
+
+    <!-- HEADER / BRANDING -->
+    <HBox alignment="CENTER" styleClass="sidebar-header">
+        <Label text="Staff Dashboard" styleClass="sidebar-title"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- NAVIGATION BUTTONS -->
+    <VBox spacing="8" alignment="TOP_LEFT" styleClass="nav-section">
+        <Button text="🏠 Inventory" fx:id="btnInventory" styleClass="nav-btn" onAction="#showInventory"/>
+        <Button text="🧾 Sales Order" fx:id="btnSalesOrder" styleClass="nav-btn" onAction="#showSalesOrder"/>
+        <Button text="↩ Customer Returns" fx:id="btnCustomerReturns" styleClass="nav-btn" onAction="#showCustomerReturns"/>
+    </VBox>
+
+</VBox>
