@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.InventoryController"
+      spacing="20" 
+      stylesheets="@dashboard.css"
+      styleClass="dashboard-content">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Inventory Overview" styleClass="section-title"/>
+
+    <!-- Quick Stats -->
+    <HBox spacing="20">
+        <VBox styleClass="stat-card">
+            <Label text="Total Products" styleClass="stat-label"/>
+            <Label fx:id="totalProductsLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox styleClass="stat-card">
+            <Label text="Low Stock Items" styleClass="stat-label"/>
+            <Label fx:id="lowStockLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+
+        <VBox styleClass="stat-card">
+            <Label text="Out of Stock" styleClass="stat-label"/>
+            <Label fx:id="outOfStockLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+        
+        <VBox alignment="CENTER_LEFT" spacing="10">
+            <Button text="Refresh Data" onAction="#handleRefresh" styleClass="primary-button"/>
+        </VBox>
+    </HBox>
+
+    <!-- Products Table -->
+    <VBox spacing="10">
+        <Label text="Product List" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+        <TableView fx:id="productsTable" prefHeight="400">
+        </TableView>
+    </VBox>
+</VBox>

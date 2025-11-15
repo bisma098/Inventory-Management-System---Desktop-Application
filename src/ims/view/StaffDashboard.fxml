@@ -3,10 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="mainBorderPane"
             prefHeight="800.0" prefWidth="1200.0"
             stylesheets="@dashboard.css">
 
@@ -26,32 +26,6 @@
 
     <!-- ========== MAIN CONTENT ========== -->
     <center>
-        <VBox spacing="20" alignment="TOP_LEFT" styleClass="dashboard-content">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-
-            <Label text="Overview" styleClass="section-title"/>
-
-            <!-- Quick Stats -->
-            <HBox spacing="20">
-                <VBox styleClass="stat-card">
-                    <Label text="Total Products" styleClass="stat-label"/>
-                    <Label text="1,248" styleClass="stat-value"/>
-                </VBox>
-
-                <VBox styleClass="stat-card">
-                    <Label text="Low Stock Items" styleClass="stat-label"/>
-                    <Label text="12" styleClass="stat-value"/>
-                </VBox>
-
-                <VBox styleClass="stat-card">
-                    <Label text="Out of Stock" styleClass="stat-label"/>
-                    <Label text="3" styleClass="stat-value"/>
-                </VBox>
-            </HBox>
-
-            <!-- Placeholder for Table or Dynamic Data -->
-        </VBox>
+            <!-- Loaded automaticaly -->
     </center>
 </BorderPane>
