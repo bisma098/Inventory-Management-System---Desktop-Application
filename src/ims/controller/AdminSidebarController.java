@@ -54,7 +54,8 @@ public class AdminSidebarController {
         System.out.println("Navigating to Users...");
         // TODO: Load Users management view
     }
-     private void loadContent(String fxmlPath) {
+    
+    private void loadContent(String fxmlPath) {
         try {
             BorderPane parentBorderPane = getParentBorderPane();
             if (parentBorderPane != null) {

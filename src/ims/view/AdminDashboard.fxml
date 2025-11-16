@@ -18,11 +18,7 @@
 
     <!-- ========== HEADER ========== -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-            <Label text="JoyBox IMS" styleClass="header-title"/>
-            <Region HBox.hgrow="ALWAYS" />
-           
-        </HBox>
+        <fx:include source="Header.fxml" />
     </top>
 
     <!-- ========== MAIN CONTENT ========== -->

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.HeaderController"
+            style="-fx-padding: 0;">
+
+    <top>
+        <HBox spacing="10"
+              alignment="CENTER_LEFT"
+              style="-fx-background-color: #6f6cc8ff; -fx-padding: 20;"
+              prefHeight="100" minHeight="100" maxHeight="100"
+              maxWidth="1.7976931348623157E308">
+
+            <Label text="JoyBox IMS"
+                   style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <Button text="Profile" onAction="#openProfile"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
+
+            <Button text="Logout" onAction="#logout"
+                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <Pane/>
+    </center>
+
+</BorderPane>
