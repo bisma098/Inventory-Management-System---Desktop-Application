@@ -23,12 +23,12 @@ public class ManagerSidebarController {
 
     @FXML
     private void showPurchaseOrders() {
-        System.out.println("Purchase Orders clicked");
+        loadContent("/ims/view/PurchaseOrder.fxml");
     }
 
-    @FXML
+   @FXML
     private void showSupplierReturns() {
-        System.out.println("Supplier Returns clicked");
+        loadContent("/ims/view/SupplierReturn.fxml"); 
     }
 
     @FXML

@@ -1,5 +1,7 @@
 package ims.model;
 
+import java.time.LocalDate;
+
 public class PurchaseOrderLine {
     private int lineId;
     private int quantity;
@@ -7,6 +9,9 @@ public class PurchaseOrderLine {
     private Product product;       // ✅ association
     private Warehouse warehouse;   // ✅ association
     private BatchLot batchLot;     // ✅ link to batch (optional, after goods received)
+    private LocalDate manufactureDate;
+    private LocalDate expiryDate;
+
 
     // ✅ Constructors
     public PurchaseOrderLine() {}
@@ -50,4 +55,10 @@ public class PurchaseOrderLine {
             System.out.println("Quantity updated for Line " + lineId + ": " + newQty);
         }
     }
+
+    public LocalDate getManufactureDate() { return manufactureDate; }
+    public void setManufactureDate(LocalDate manufactureDate) { this.manufactureDate = manufactureDate; }
+
+    public LocalDate getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
 }

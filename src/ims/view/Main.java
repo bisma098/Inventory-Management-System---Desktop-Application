@@ -40,7 +40,13 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+    try {
         ims.database.DatabaseConnection.getConnection();
-        launch(args);
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    launch(args);
+}
+
 }

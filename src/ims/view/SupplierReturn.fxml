@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.SupplierReturnController"
+      spacing="20">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header Section -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <Label text="Supplier Returns" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <Button text="+ Create New Return" onAction="#showCreateForm" 
+                style="-fx-background-color:linear-gradient(to bottom, #008080, #006666); -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16;"/>
+    </HBox>
+
+    <!-- Supplier Returns Table -->
+    <VBox spacing="10">
+        <TableView fx:id="supplierReturnsTable" prefHeight="400">
+            <columns>
+                <TableColumn text="Return ID" prefWidth="80"/>
+                <TableColumn text="Supplier" prefWidth="200"/>
+                <TableColumn text="Return Date" prefWidth="120"/>
+                <TableColumn text="Reason" prefWidth="200"/>
+                <TableColumn text="Total Amount" prefWidth="120"/>
+                <TableColumn text="Action" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Return Lines Section (Visible when return is selected) -->
+    <VBox fx:id="returnDetailsSection" spacing="10" visible="false">
+        <Label text="Return Lines for Selected Supplier Return" style="-fx-font-size: 16px; -fx-font-weight: bold"/>
+        <TableView fx:id="returnLinesTable" prefHeight="200">
+            <columns>
+                <TableColumn text="Product" prefWidth="200"/>
+                <TableColumn text="Batch No" prefWidth="100"/>
+                <TableColumn text="Quantity" prefWidth="80"/>
+                <TableColumn text="Unit Price" prefWidth="100"/>
+                <TableColumn text="Line Total" prefWidth="100"/>
+            </columns>
+        </TableView>
+        <Button text="Close Details" onAction="#hideReturnDetails" 
+                style="-fx-background-color: #666; -fx-text-fill: white; -fx-padding: 5 10;"/>
+    </VBox>
+</VBox>

@@ -6,11 +6,10 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    private static final String URL = "jdbc:sqlserver://DESKTOP-3C2QQNA;databaseName=ims;encrypt=false;";
+    private static final String URL =
+            "jdbc:sqlserver://DESKTOP-3C2QQNA;databaseName=ims;encrypt=false;";
     private static final String USER = "bisma";
     private static final String PASSWORD = "bix098";
-
-    private static Connection connection;
 
     static {
         try {
@@ -22,27 +21,8 @@ public class DatabaseConnection {
         }
     }
 
-    public static Connection getConnection() {
-        try {
-            if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("Connected to SQL Server Successfully!");
-            }
-        } catch (SQLException e) {
-            System.err.println("Database Connection Failed!");
-            e.printStackTrace();
-        }
-        return connection;
-    }
-
-    public static void closeConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-                System.out.println("Database connection closed.");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing connection: " + e.getMessage());
-        }
+    // ⭐ Always return a NEW connection
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

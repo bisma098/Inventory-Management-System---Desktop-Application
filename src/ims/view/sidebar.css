@@ -1,31 +1,45 @@
 .sidebar {
-    -fx-background-color: #6e74ab;
+    -fx-background-color: linear-gradient(to bottom, #008080, #20B2AA);
     -fx-padding: 2;
     -fx-pref-width: 200px;
     -fx-alignment: top-center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.3, 2, 0);
 }
 
 .sidebar-header {
-    -fx-padding: 7;
+    -fx-padding: 15;
+    -fx-border-color: #E0F7FA;
+    -fx-border-width: 0 0 1 0;
 }
 
 .sidebar-title {
-    -fx-text-fill: rgb(44, 33, 91);
-    -fx-font-size: 15px;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0.3, 1, 1);
 }
 
 .nav-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #dcdde1;
+    -fx-text-fill: #E0F7FA;
     -fx-font-size: 14px;
     -fx-pref-width: 180px;
     -fx-alignment: center-left;
-    -fx-padding: 8 10;
+    -fx-padding: 12 15;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
 }
 
 .nav-btn:hover {
-    -fx-background-color: #585293;
+    -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
+    -fx-border-color: #E0F7FA;
+    -fx-border-width: 1;
+}
+
+.nav-btn:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
