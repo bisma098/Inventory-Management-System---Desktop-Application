@@ -1,45 +1,28 @@
 package ims.model;
 
 public class User {
-    protected int userId;
-    protected String userName;
-    protected String role;
-    protected String password;
-
-    // Composition: User has Address and ContactInfo
-    private Address address;
-    private ContactInfo contactInfo;
-
-    public User(int userId, String userName, String role, String password) {
+    private int userId;
+    private String userName;
+    private String password;
+    private String role;
+    
+    public User(int userId, String userName, String password, String role) {
         this.userId = userId;
         this.userName = userName;
-        this.role = role;
         this.password = password;
-        this.address = new Address();
-        this.contactInfo = new ContactInfo();
+        this.role = role;
     }
-
-    // Getters & Setters
+    
+    // Getters and setters
     public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
+    
     public String getUserName() { return userName; }
-    public String getRole() { return role; }
+    public void setUserName(String userName) { this.userName = userName; }
+    
     public String getPassword() { return password; }
-
-    public Address getAddress() { return address; }
-    public void setAddress(Address address) { this.address = address; }
-
-    public ContactInfo getContactInfo() { return contactInfo; }
-    public void setContactInfo(ContactInfo contactInfo) { this.contactInfo = contactInfo; }
-
-    public boolean login(String inputUsername, String inputPassword) {
-        return userName.equals(inputUsername) && password.equals(inputPassword);
-    }
-
-    public void showUserDetails() {
-        System.out.println("User: " + userName);
-        System.out.println("Role: " + role);
-        System.out.println("Address: " + address);
-        System.out.println("Contact: " + contactInfo);
-    }
+    public void setPassword(String password) { this.password = password; }
+    
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }
-

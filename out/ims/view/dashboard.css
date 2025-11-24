@@ -1,0 +1,80 @@
+/* ===== PROFILE MENU STYLES ===== */
+.profile-container {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.profile-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.profile-content {
+    -fx-spacing: 8;
+    -fx-alignment: CENTER;
+}
+
+.profile-avatar {
+    -fx-background-color: #6e74ab;
+    -fx-background-radius: 50%;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-alignment: CENTER;
+}
+
+.profile-initials {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.profile-name {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.profile-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    -fx-padding: 8 0;
+}
+
+.profile-menu-item {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;
+    -fx-pref-width: 150;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+
+.profile-menu-item:hover {
+    -fx-background-color: #f1f5f9;
+}
+
+.profile-menu-item .label {
+    -fx-text-fill: #475569;
+}
+
+.profile-menu-item:hover .label {
+    -fx-text-fill: #1e293b;
+}
+
+.logout-btn {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #dc2626;
+}

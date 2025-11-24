@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1"
@@ -19,14 +18,14 @@
     <!-- ========== HEADER ========== -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-            <Label text="JoyBox IMS" styleClass="header-title"/>
+            <Label text="JoyBox IMS - Admin" styleClass="header-title"/>
             <Region HBox.hgrow="ALWAYS" />
-           
+            <Button text="Logout" styleClass="logout-btn" onAction="#handleLogout"/>
         </HBox>
     </top>
 
     <!-- ========== MAIN CONTENT ========== -->
     <center>
-        <!--loaded automatically-->
+        <!-- Content will be loaded dynamically by sidebar controller -->
     </center>
 </BorderPane>

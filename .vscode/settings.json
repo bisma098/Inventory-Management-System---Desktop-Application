@@ -1,5 +1,6 @@
 {
   "java.project.referencedLibraries": [
-    "C:/Users/STRONG LINK/Downloads/openjfx-21.0.9_windows-x64_bin-sdk/javafx-sdk-21.0.9/lib/**/*.jar"
+    "C:/Users/User/Desktop/sem5/sdaproject_ssms/Inventory-Management-System---Desktop-Application/lib/**/*.jar",
+    "lib/mssql-jdbc-13.2.1.jre11.jar"
   ]
 }

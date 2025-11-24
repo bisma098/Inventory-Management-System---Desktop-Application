@@ -9,16 +9,18 @@ public class BatchLot {
     private int totalQuantity;
     private int availableQuantity;
 
-    private Warehouse warehouse;  
-    private Product product;      
-    private PurchaseOrderLine purchaseOrderLine; // optional based on UML
+    private Warehouse warehouse;
+    private Product product;
 
-    // ✅ Constructors
+    private int purchaseOrderLineId;              // 🔥 Added for linking
+    private PurchaseOrderLine purchaseOrderLine;  // Final object link
+
     public BatchLot() {}
 
     public BatchLot(int batchId, LocalDate manufactureDate, LocalDate expiryDate,
                     int totalQuantity, int availableQuantity,
                     Product product, Warehouse warehouse) {
+
         this.batchId = batchId;
         this.manufactureDate = manufactureDate;
         this.expiryDate = expiryDate;
@@ -28,7 +30,7 @@ public class BatchLot {
         this.warehouse = warehouse;
     }
 
-    // ✅ Getters & Setters
+    // Getters & Setters
     public int getBatchId() { return batchId; }
     public void setBatchId(int batchId) { this.batchId = batchId; }
 
@@ -50,7 +52,16 @@ public class BatchLot {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
-    // ✅ Functional Methods
+    // 🔥 NEW
+    public int getPurchaseOrderLineId() { return purchaseOrderLineId; }
+    public void setPurchaseOrderLineId(int purchaseOrderLineId) { this.purchaseOrderLineId = purchaseOrderLineId; }
+
+    public PurchaseOrderLine getPurchaseOrderLine() { return purchaseOrderLine; }
+    public void setPurchaseOrderLine(PurchaseOrderLine purchaseOrderLine) {
+        this.purchaseOrderLine = purchaseOrderLine;
+    }
+
+    // Functional Methods
     public boolean validateQuantity(int qty) {
         return qty > 0 && qty <= availableQuantity;
     }
@@ -63,5 +74,4 @@ public class BatchLot {
             System.out.println("Invalid quantity update. Available: " + availableQuantity);
         }
     }
-
 }

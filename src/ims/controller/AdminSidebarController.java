@@ -2,41 +2,21 @@ package ims.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
+import java.io.IOException;
 
 public class AdminSidebarController {
 
     @FXML
-    private VBox sidebar;
-
-    @FXML
-    private Button btnInventory;
-
-    @FXML
-    private Button btnReports;
-
-    @FXML
-    private Button btnUserActivity;
-
-    @FXML
-    private Button btnAuditLog;
-
-    @FXML
-    private Button btnCategories;
-
-    @FXML
-    private Button btnProductTracking;
-
-    @FXML
-    private Button btnUsers;
+    private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers;
 
     // ================== EVENT HANDLERS ==================
 
     @FXML
-    private void showInventory(ActionEvent event) {
-        System.out.println("Navigating to Inventory...");
-        // TODO: Load Inventory view (AdminDashboardController.loadView("Inventory.fxml"))
+    private void showInventory() {
+        loadContent("/ims/view/Inventory.fxml");
     }
 
     @FXML
@@ -73,5 +53,41 @@ public class AdminSidebarController {
     private void showUsers(ActionEvent event) {
         System.out.println("Navigating to Users...");
         // TODO: Load Users management view
+    }
+    
+    private void loadContent(String fxmlPath) {
+        try {
+            BorderPane parentBorderPane = getParentBorderPane();
+            if (parentBorderPane != null) {
+                parentBorderPane.setCenter(FXMLLoader.load(getClass().getResource(fxmlPath)));
+                System.out.println("Successfully loaded: " + fxmlPath);
+            } else {
+                System.err.println("Parent BorderPane not found!");
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading FXML: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+    private BorderPane getParentBorderPane() {
+        if (btnInventory != null) {
+            var scene = btnInventory.getScene();
+            if (scene != null) {
+                var root = scene.getRoot();
+                if (root instanceof BorderPane) {
+                    return (BorderPane) root;
+                }
+            }
+        }
+        return null;
+    }
+    
+    @FXML
+    public void initialize() {
+        // Use Platform.runLater to delay the initial load until the scene is fully set up
+        javafx.application.Platform.runLater(() -> {
+            showInventory();
+        });
     }
 }

@@ -36,6 +36,8 @@ public class Product {
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void addQuantity(int quantity) { this.quantity += quantity; }
+    public void removeQuantity(int quantity) { this.quantity -= quantity; }
 
     public LocalDate getExpiryDate() { return expiryDate; }
     public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }

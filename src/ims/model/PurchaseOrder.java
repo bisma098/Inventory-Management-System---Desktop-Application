@@ -8,7 +8,6 @@ public class PurchaseOrder {
     private int orderId;
     private LocalDate orderDate;
     private Supplier supplier;   // ✅ association
-    //private Staff staff;         // ✅ created by
     private List<PurchaseOrderLine> orderLines;
 
     // ✅ Constructors

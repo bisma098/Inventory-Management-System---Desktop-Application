@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="mainBorderPane"
+            prefHeight="800.0" prefWidth="1200.0"
+            stylesheets="@dashboard.css">
+
+    <!-- ========== SIDEBAR ========== -->
+    <left>
+        <fx:include source="StaffSidebar.fxml" />
+    </left>
+
+    <!-- ========== HEADER ========== -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <Label text="JoyBox IMS" styleClass="header-title"/>
+            <Region HBox.hgrow="ALWAYS" />
+           
+        </HBox>
+    </top>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <center>
+            <!-- Loaded automaticaly -->
+    </center>
+</BorderPane>

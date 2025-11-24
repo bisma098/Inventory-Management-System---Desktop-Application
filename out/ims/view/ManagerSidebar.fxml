@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.ManagerSidebarController"
+      stylesheets="@sidebar.css"
+      styleClass="sidebar"
+      alignment="TOP_CENTER" prefWidth="200">
+
+    <!-- BRANDING -->
+    <HBox alignment="CENTER" styleClass="sidebar-header">
+        <Label text="Manager Dashboard" styleClass="sidebar-title"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- NAVIGATION BUTTONS -->
+    <VBox spacing="8" alignment="TOP_LEFT" styleClass="nav-section">
+        <Button text="🏠 Inventory" fx:id="btnInventory" styleClass="nav-btn" onAction="#showInventory"/>
+        <Button text="📦 Products" fx:id="btnProducts" styleClass="nav-btn" onAction="#showProducts"/>
+        <Button text="🧾 Purchase Orders" fx:id="btnPurchaseOrders" styleClass="nav-btn" onAction="#showPurchaseOrders"/>
+        <Button text="🔄 Supplier Returns" fx:id="btnSupplierReturn" styleClass="nav-btn" onAction="#showSupplierReturns"/>
+        <Button text="⚙ Adjust Stock" fx:id="btnAdjustStock" styleClass="nav-btn" onAction="#showAdjustStock"/>
+        <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
+    </VBox>
+
+</VBox>
