@@ -7,10 +7,10 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.ManagerDashboardController"
             fx:id="mainBorderPane"
             prefHeight="800.0" prefWidth="1200.0"
-            stylesheets="@dashboard.css"
-            fx:controller="ims.controller.HeaderController">
+            stylesheets="@dashboard.css">
 
     <!-- ========== SIDEBAR ========== -->
     <left>
@@ -19,37 +19,9 @@
 
     <!-- ========== HEADER ========== -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-            <Label text="JoyBox IMS" styleClass="header-title"/>
-            <Region HBox.hgrow="ALWAYS" />
-            
-            <!-- Profile Menu -->
-            <VBox styleClass="profile-container">
-                <Button styleClass="profile-button" onAction="#handleProfileMenu">
-                    <HBox styleClass="profile-content">
-                        <StackPane styleClass="profile-avatar">
-                            <Label fx:id="initialsLabel" styleClass="profile-initials" text="M" />
-                        </StackPane>
-                        <Label fx:id="nameLabel" styleClass="profile-name" text="Manager User" />
-                    </HBox>
-                </Button>
-                
-                <!-- Profile Dropdown Menu (initially hidden) -->
-                <VBox fx:id="profileMenu" styleClass="profile-menu" visible="false" managed="false">
-                    <Button styleClass="profile-menu-item" onAction="#handleProfileSettings">
-                        <Label text="Profile Settings" />
-                    </Button>
-                    <Button styleClass="profile-menu-item" onAction="#handleChangePassword">
-                        <Label text="Change Password" />
-                    </Button>
-                    <Separator />
-                    <Button styleClass="profile-menu-item" onAction="#logout">
-                        <Label text="Logout" />
-                    </Button>
-                </VBox>
-            </VBox>
-        </HBox>
+        <fx:include source="Header.fxml" />
     </top>
+
 
     <!-- ========== MAIN CONTENT ========== -->
     <center>
