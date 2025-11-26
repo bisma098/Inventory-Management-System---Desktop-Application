@@ -3,9 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1"
+            
             fx:id="mainBorderPane"
             prefHeight="800.0" prefWidth="1200.0"
             stylesheets="@dashboard.css">
@@ -17,15 +19,12 @@
 
     <!-- ========== HEADER ========== -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
-            <Label text="JoyBox IMS" styleClass="header-title"/>
-            <Region HBox.hgrow="ALWAYS" />
-           
-        </HBox>
+        <fx:include source="Header.fxml" />
     </top>
+
 
     <!-- ========== MAIN CONTENT ========== -->
     <center>
-            <!-- Loaded automaticaly -->
+        <!-- Content will be loaded dynamically by sidebar controller -->
     </center>
 </BorderPane>

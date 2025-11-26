@@ -4,10 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+
 import java.io.IOException;
 
 public class AdminSidebarController {
+    @FXML
+    private AnchorPane mainContentPane; // connected to fx:id="mainContentPane" in AdminDashboard.fxml
 
     @FXML
     private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers;
@@ -24,7 +29,10 @@ public class AdminSidebarController {
         System.out.println("Navigating to Reports...");
         // TODO: Load Reports view
     }
-
+    @FXML
+    private void showDatabase() {
+       loadContent("/ims/view/Backup.fxml");
+    }
     @FXML
     private void showUserActivityLog(ActionEvent event) {
         System.out.println("Navigating to User Activity Log...");

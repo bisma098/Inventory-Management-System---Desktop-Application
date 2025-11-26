@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="ims.controller.BackupController" fx:id="mainContentPane">
+    <children>
+        <TableView fx:id="backupTable" layoutX="20" layoutY="20" prefWidth="600" prefHeight="300">
+            <columns>
+                <TableColumn text="File Name" fx:id="fileNameCol" prefWidth="300"/>
+                <TableColumn text="Created At" fx:id="createdAtCol" prefWidth="200"/>
+                <TableColumn text="Status" fx:id="statusCol" prefWidth="100"/>
+            </columns>
+        </TableView>
+        <Button text="Restore Selected" fx:id="restoreButton" layoutX="450" layoutY="330" onAction="#handleRestore"/>
+        <Label fx:id="messageLabel" layoutX="20" layoutY="330"/>
+    </children>
+</AnchorPane>

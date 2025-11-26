@@ -2,6 +2,7 @@ package ims.controller;
 
 import ims.database.DatabaseConnection;
 import ims.model.User;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
@@ -30,62 +31,26 @@ public class LoginController {
 
     @FXML
     
-    private void handleLogin() {
-    String username = usernameField.getText().trim();
-    String password = passwordField.getText().trim();
+private void handleLogin(ActionEvent event) {
+    String username = usernameField.getText();
+    String password = passwordField.getText();
     String role = roleComboBox.getValue();
 
-    if (username.isEmpty() || password.isEmpty() || role == null) {
-        showAlert("Please fill in all fields and select a role.");
+    DataController dc = DataController.getInstance();
+
+    // Validate from cached list, NOT database
+    User user = dc.findUserByCredentials(username, password, role);
+
+    if (user == null) {
+        errorLabel.setText("Invalid username or password!");
         return;
     }
 
-    try {
-        Integer loggedInUserId = validateCredentials(username, password, role);
+    // Set as current user
+    dc.setCurrentUser(user);
 
-        if (loggedInUserId != null) {
-
-            // Load user globally (NO controller used here)
-            User loggedInUser = DataController.getInstance()
-                    .getUsers()
-                    .stream()
-                    .filter(u -> u.getUserId() == loggedInUserId)
-                    .findFirst()
-                    .orElse(null);
-
-            DataController.getInstance().setCurrentUser(loggedInUser);
-
-            // ======== Load the dashboard FXML based on role ========
-            String fxml = null;
-
-            switch (role) {
-                case "Admin":   fxml = "/ims/view/AdminDashboard.fxml"; break;
-                case "Manager": fxml = "/ims/view/ManagerDashboard.fxml"; break;
-                case "Staff":   fxml = "/ims/view/StaffDashboard.fxml"; break;
-            }
-
-            URL fxmlUrl = getClass().getResource(fxml);
-            if (fxmlUrl == null) {
-                showAlert("Dashboard not available for role: " + role);
-                return;
-            }
-
-            Parent root = FXMLLoader.load(fxmlUrl);
-
-            // Switch to the dashboard scene
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 700));
-            stage.setTitle("IMS - " + role + " Dashboard");
-
-        } else {
-            errorLabel.setText("Invalid credentials or role mismatch!");
-            showAlert("Invalid username, password, or role selection!");
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        showAlert("Login failed due to system error!");
-    }
+    // Continue to dashboard...
+    loadDashboard(user.getRole());
 }
 
     private void loadDashboard(String role) {
@@ -116,61 +81,6 @@ public class LoginController {
     }
 }    
 
-    private Integer validateCredentials(String username, String password, String role) {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
-        try {
-            conn = DatabaseConnection.getConnection();
-            
-            String sql = "SELECT u.userId, u.userName, u.role " +
-                        "FROM Users u " +
-                        "WHERE u.userName = ? AND u.password = ? AND u.role = ? " +
-                        "AND EXISTS (SELECT 1 FROM ";
-            
-            switch (role) {
-                case "Admin":
-                    sql += "Admin a WHERE a.adminId = u.userId)";
-                    break;
-                case "Manager":
-                    sql += "Manager m WHERE m.managerId = u.userId)";
-                    break;
-                case "Staff":
-                    sql += "Staff s WHERE s.staffId = u.userId)";
-                    break;
-                default:
-                    return 0;
-            }
-
-
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, role);
-            
-
-            rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                return rs.getInt("userId");  // 🔥 ONLY return userId
-            }
-
-            return null;
-                
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
