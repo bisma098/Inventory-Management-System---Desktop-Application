@@ -7,7 +7,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" 
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ims.controller.ManagerDashboardController"
+            
             fx:id="mainBorderPane"
             prefHeight="800.0" prefWidth="1200.0"
             stylesheets="@dashboard.css">

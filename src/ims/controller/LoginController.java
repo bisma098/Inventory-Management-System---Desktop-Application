@@ -1,6 +1,7 @@
 package ims.controller;
 
 import ims.database.DatabaseConnection;
+import ims.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
@@ -28,80 +29,94 @@ public class LoginController {
     }
 
     @FXML
+    
     private void handleLogin() {
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText().trim();
-        String role = roleComboBox.getValue();
+    String username = usernameField.getText().trim();
+    String password = passwordField.getText().trim();
+    String role = roleComboBox.getValue();
 
-        // Basic validation
-        if (username.isEmpty() || password.isEmpty() || role == null) {
-            showAlert("Please fill in all fields and select a role.");
+    if (username.isEmpty() || password.isEmpty() || role == null) {
+        showAlert("Please fill in all fields and select a role.");
+        return;
+    }
+
+    try {
+        Integer loggedInUserId = validateCredentials(username, password, role);
+
+        if (loggedInUserId != null) {
+
+            // Load user globally (NO controller used here)
+            User loggedInUser = DataController.getInstance()
+                    .getUsers()
+                    .stream()
+                    .filter(u -> u.getUserId() == loggedInUserId)
+                    .findFirst()
+                    .orElse(null);
+
+            DataController.getInstance().setCurrentUser(loggedInUser);
+
+            // ======== Load the dashboard FXML based on role ========
+            String fxml = null;
+
+            switch (role) {
+                case "Admin":   fxml = "/ims/view/AdminDashboard.fxml"; break;
+                case "Manager": fxml = "/ims/view/ManagerDashboard.fxml"; break;
+                case "Staff":   fxml = "/ims/view/StaffDashboard.fxml"; break;
+            }
+
+            URL fxmlUrl = getClass().getResource(fxml);
+            if (fxmlUrl == null) {
+                showAlert("Dashboard not available for role: " + role);
+                return;
+            }
+
+            Parent root = FXMLLoader.load(fxmlUrl);
+
+            // Switch to the dashboard scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(root, 1200, 700));
+            stage.setTitle("IMS - " + role + " Dashboard");
+
+        } else {
+            errorLabel.setText("Invalid credentials or role mismatch!");
+            showAlert("Invalid username, password, or role selection!");
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        showAlert("Login failed due to system error!");
+    }
+}
+
+    private void loadDashboard(String role) {
+    try {
+        String fxml = null;
+        switch (role) {
+            case "Admin":   fxml = "/ims/view/AdminDashboard.fxml"; break;
+            case "Manager": fxml = "/ims/view/ManagerDashboard.fxml"; break;
+            case "Staff":   fxml = "/ims/view/StaffDashboard.fxml"; break;
+        }
+
+        URL fxmlUrl = getClass().getResource(fxml);
+        if (fxmlUrl == null) {
+            showAlert("Dashboard not available for role: " + role);
             return;
         }
 
-        try {
-            // Validate credentials first
-            if (validateCredentials(username, password, role)) {
-                // Login successful - navigate to appropriate dashboard
-                String fxml = null;
+        FXMLLoader loader = new FXMLLoader(fxmlUrl);
+        Parent root = loader.load();
 
-                switch (role) {
-                    case "Admin":   fxml = "/ims/view/AdminDashboard.fxml"; break;
-                    case "Manager": fxml = "/ims/view/ManagerDashboard.fxml"; break;
-                    case "Staff":   fxml = "/ims/view/StaffDashboard.fxml"; break;
-                }
+        Stage stage = (Stage) usernameField.getScene().getWindow();
+        stage.setScene(new Scene(root, 1200, 700));
+        stage.setTitle("IMS - " + role + " Dashboard");
 
-                // Check if FXML file exists before loading
-                URL fxmlUrl = getClass().getResource(fxml);
-                if (fxmlUrl == null) {
-                    showAlert("Dashboard not available for role: " + role);
-                    return;
-                }
-
-                // Load the FXML and get the controller
-                // In handleLogin method, after loading the FXML
-FXMLLoader loader = new FXMLLoader(fxmlUrl);
-Parent root = loader.load();
-
-System.out.println("=== DEBUG LoginController ===");
-System.out.println("FXML loaded: " + fxml);
-System.out.println("Username to pass: " + username);
-
-Object dashboardController = loader.getController();
-System.out.println("Dashboard controller: " + dashboardController);
-System.out.println("Dashboard controller class: " + (dashboardController != null ? dashboardController.getClass().getName() : "null"));
-
-if (dashboardController instanceof ManagerDashboardController) {
-    System.out.println("Calling ManagerDashboardController.setUserName()");
-    ((ManagerDashboardController) dashboardController).setUserName(username);
-} else if (dashboardController instanceof AdminDashboardController) {
-    System.out.println("Calling AdminDashboardController.setUserName()");
-    ((AdminDashboardController) dashboardController).setUserName(username);
-} else if (dashboardController instanceof StaffDashboardController) {
-    System.out.println("Calling StaffDashboardController.setUserName()");
-    ((StaffDashboardController) dashboardController).setUserName(username);
-} else {
-    System.out.println("ERROR: Unknown controller type!");
-}
-System.out.println("=== END DEBUG ===");
-                
-               
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                stage.setScene(new Scene(root, 1200, 700));
-                stage.setTitle("IMS - " + role + " Dashboard");
-
-            } else {
-                errorLabel.setText("Invalid credentials or role mismatch!");
-                showAlert("Invalid username, password, or role selection!");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Login failed due to system error!");
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        showAlert("Error loading dashboard!");
     }
+}    
 
-    private boolean validateCredentials(String username, String password, String role) {
+    private Integer validateCredentials(String username, String password, String role) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -125,20 +140,28 @@ System.out.println("=== END DEBUG ===");
                     sql += "Staff s WHERE s.staffId = u.userId)";
                     break;
                 default:
-                    return false;
+                    return 0;
             }
+
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setString(3, role);
+            
 
             rs = stmt.executeQuery();
-            return rs.next();
+            
+            if (rs.next()) {
+                return rs.getInt("userId");  // 🔥 ONLY return userId
+            }
+
+            return null;
+                
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         } finally {
             try {
                 if (rs != null) rs.close();

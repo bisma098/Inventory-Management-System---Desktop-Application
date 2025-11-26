@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 public class DataController {
     private List<User> users;
+    private User currentUser;
     private List<Product> products;
     private List<Category> categories;
     private ProductCatalogue productCatalogue;
@@ -47,7 +48,9 @@ public class DataController {
         }
         return instance;
     }
-    
+    public User getCurrentUser() {
+        return currentUser;
+    }
     public void loadAllData() {
         loadUsers();
         loadCategories();
@@ -582,6 +585,11 @@ public void addPurchaseOrder(PurchaseOrder po)
 public void addBatch(BatchLot batch)
 {
     batchLots.add(batch);
+}
+
+public void setCurrentUser(User user)
+{
+    this.currentUser=user;
 }
 
 public ObservableList<SupplierReturn> getSupplierReturns() {
