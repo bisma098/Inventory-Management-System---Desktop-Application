@@ -1,12 +1,15 @@
 package ims.controller;
 
 import ims.model.Backup;
+import ims.model.User;
 import ims.database.BackupUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -38,11 +41,17 @@ public class BackupController {
         if (success) {
             messageLabel.setText("Backup created successfully!");
             loadBackupFiles(); // Refresh the table to show new backup
+            
+            User currentUser = DataController.getInstance().getCurrentUser();
+            DataController.getInstance().logUserActivity(
+            currentUser.getUserId(),
+            "Back up files"
+        );
         } else {
             messageLabel.setText("Backup failed!");
         }
     }
-
+    
     @FXML
     private void handleRestore() {
     Backup selected = backupTable.getSelectionModel().getSelectedItem();
@@ -51,6 +60,11 @@ public class BackupController {
         messageLabel.setText(ok ? "Restore completed!" : "Restore failed!");
         if (ok && restoreController != null) {
             restoreController.addRestoreRecord(selected.getFileName(), "adminUser");
+            User currentUser = DataController.getInstance().getCurrentUser();
+            DataController.getInstance().logUserActivity(
+            currentUser.getUserId(),
+            "Restored Backup"
+        );
         }
     } else {
         messageLabel.setText("Select a backup first!");

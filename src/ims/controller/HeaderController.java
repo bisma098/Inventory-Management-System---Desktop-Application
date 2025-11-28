@@ -72,6 +72,11 @@ public class HeaderController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 1200, 700));
             stage.setTitle("IMS - Login");
+            User currentUser = DataController.getInstance().getCurrentUser();
+            DataController.getInstance().logUserActivity(
+            currentUser.getUserId(),
+            "Logged out"
+        );
         } catch (Exception e) {
             e.printStackTrace();
         }

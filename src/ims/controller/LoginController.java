@@ -40,7 +40,7 @@ private void handleLogin(ActionEvent event) {
 
     // Validate from cached list, NOT database
     User user = dc.findUserByCredentials(username, password, role);
-
+    
     if (user == null) {
         errorLabel.setText("Invalid username or password!");
         return;
@@ -49,8 +49,15 @@ private void handleLogin(ActionEvent event) {
     // Set as current user
     dc.setCurrentUser(user);
 
+    User currentUser = dc.getCurrentUser();
+    dc.logUserActivity(
+
+    currentUser.getUserId(),
+     "Logged into the system"
+    );
     // Continue to dashboard...
     loadDashboard(user.getRole());
+    
 }
 
     private void loadDashboard(String role) {

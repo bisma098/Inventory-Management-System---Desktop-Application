@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ims.controller.BatchTrackingController"
+      spacing="15" style="-fx-padding: 20;">
+
+
+    <!-- Horizontal Line -->
+    <Separator style="-fx-padding: 10 0;"/>
+
+    <!-- Refresh Button -->
+    <Button text="Refresh Data" 
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+
+    <!-- Batch Table -->
+    <TableView fx:id="batchTable" prefHeight="350" 
+               style="-fx-border-color: #ddd; -fx-border-width: 1;">
+        <columns>
+            <TableColumn fx:id="colBatchId" text="Batch ID" prefWidth="100"/>
+            <TableColumn fx:id="colProduct" text="Product" prefWidth="190"/>
+            <TableColumn fx:id="colWarehouse" text="Warehouse" prefWidth="190"/>
+            <TableColumn fx:id="colTotalQty" text="Total Qty" prefWidth="80"/>
+            <TableColumn fx:id="colAvailQty" text="Available Qty" prefWidth="120"/>
+            <TableColumn fx:id="colMfg" text="Manufacture Date" prefWidth="120"/>
+            <TableColumn fx:id="colExp" text="Expiry Date" prefWidth="190"/>
+        </columns>
+    </TableView>
+
+    <!-- Horizontal Line -->
+    <Separator style="-fx-padding: 10 0;"/>
+
+    <!-- Message Label -->
+    <Label fx:id="messageLabel" style="-fx-text-fill: red;"/>
+</VBox>

@@ -11,6 +11,7 @@
                 <TableColumn text="Status" fx:id="statusCol" prefWidth="100"/>
             </columns>
         </TableView>
+        <Button text="Create Backup" fx:id="backupButton" layoutX="300" layoutY="330" onAction="#handleBackup"/>
         <Button text="Restore Selected" fx:id="restoreButton" layoutX="450" layoutY="330" onAction="#handleRestore"/>
         <Label fx:id="messageLabel" layoutX="20" layoutY="330"/>
     </children>

@@ -1,10 +1,5 @@
 package ims.controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-import ims.database.DatabaseConnection;
 import ims.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,10 +10,12 @@ import javafx.scene.layout.VBox;
 public class ManageStockController {
     
     @FXML private ComboBox<Product> productComboBox;
+    @FXML private ComboBox<BatchLot> batchComboBox;
     @FXML private TextField quantityField;
     @FXML private ComboBox<String> actionComboBox;
     @FXML private TextArea reasonField;
     @FXML private Label currentStockLabel;
+    @FXML private Label batchStockLabel;
     @FXML private Label statusLabel;
     
     // New fields for selected product info
@@ -70,8 +67,65 @@ public class ManageStockController {
             }
         });
 
+        // Setup batch combo box
+        batchComboBox.setCellFactory(param -> new ListCell<BatchLot>() {
+            @Override
+            protected void updateItem(BatchLot batch, boolean empty) {
+                super.updateItem(batch, empty);
+                if (empty || batch == null) {
+                    setText(null);
+                } else {
+                    setText("Batch #" + batch.getBatchId() + " - Qty: " + batch.getAvailableQuantity());
+                }
+            }
+        });
+
+        batchComboBox.setButtonCell(new ListCell<BatchLot>() {
+            @Override
+            protected void updateItem(BatchLot batch, boolean empty) {
+                super.updateItem(batch, empty);
+                if (empty || batch == null) {
+                    setText("Select Batch");
+                } else {
+                    setText("Batch #" + batch.getBatchId());
+                }
+            }
+        });
+
         // Event handler for product selection
-        productComboBox.setOnAction(event -> updateSelectedProductInfo());
+        productComboBox.setOnAction(event -> {
+            updateSelectedProductInfo();
+            loadBatchesForProduct();
+        });
+
+        // Update batch info when batch is selected
+        batchComboBox.setOnAction(event -> updateBatchInfo());
+    }
+
+    private void loadBatchesForProduct() {
+        Product product = productComboBox.getValue();
+        if (product == null) {
+            batchComboBox.setItems(FXCollections.observableArrayList());
+            batchStockLabel.setText("Batch Stock: 0");
+            return;
+        }
+
+        ObservableList<BatchLot> batches = FXCollections.observableArrayList(
+            dataController.getBatchesByProductId(product.getProductId())
+        );
+
+        batchComboBox.setItems(batches);
+        batchComboBox.getSelectionModel().clearSelection();
+        batchStockLabel.setText("Batch Stock: 0");
+    }
+
+    private void updateBatchInfo() {
+        BatchLot selectedBatch = batchComboBox.getValue();
+        if (selectedBatch != null) {
+            batchStockLabel.setText("Batch Stock: " + selectedBatch.getAvailableQuantity());
+        } else {
+            batchStockLabel.setText("Batch Stock: 0");
+        }
     }
 
     private void loadProducts() {
@@ -98,18 +152,23 @@ public class ManageStockController {
             currentStockLabel.setText("Current Stock: 0");
             selectedProductInfo.setVisible(false);
         }
+        
+        // Clear batch selection when product changes
+        batchComboBox.setValue(null);
+        batchStockLabel.setText("Batch Stock: 0");
     }
 
     @FXML
     private void updateStock() {
         Product product = productComboBox.getValue();
+        BatchLot batch = batchComboBox.getValue();
         String action = actionComboBox.getValue();
         String quantityText = quantityField.getText();
         String reason = reasonField.getText();
 
         // 1. Validate
-        if (product == null || action == null || quantityText.isEmpty() || reason.isEmpty()) {
-            showStatus("Please fill all required fields", "error");
+        if (product == null || batch == null || action == null || quantityText.isEmpty() || reason.isEmpty()) {
+            showStatus("Please fill all required fields including batch", "error");
             return;
         }
 
@@ -122,21 +181,56 @@ public class ManageStockController {
             return;
         }
 
+        // Validate batch quantity for removal actions
+        if (action.equals("Remove Stock")) {
+            if (qty > batch.getAvailableQuantity()) {
+                showStatus("Cannot remove more than available batch stock: " + batch.getAvailableQuantity(), "error");
+                return;
+            }
+        }
+
         try {
             // 2. Update DB
             int changeQty = action.equals("Add Stock") ? qty : -qty;
 
-            if (changeQty < 0 && product.getQuantity() < qty) {
-                showStatus("Not enough stock. Current: " + product.getQuantity(), "error");
-                return;
+            // Update batch
+            if (changeQty > 0) {
+                batch.setAvailableQuantity(batch.getAvailableQuantity() + qty);
+                batch.setTotalQuantity(batch.getTotalQuantity() + qty);
+            } else {
+                batch.setAvailableQuantity(batch.getAvailableQuantity() - qty);
             }
+            dataController.updateBatchQuantity(batch, changeQty);
 
+            // Update product total quantity
             dataController.updateProductQuantity(product, changeQty);
 
-            // 3. Log inventory change
-            int currentUserId = 1; // TODO: get current logged-in user
-            dataController.logInventoryChange(currentUserId, product.getProductId(), action, qty, reason);
-            
+            User currentUser = dataController.getCurrentUser();
+            dataController.logUserActivity(
+            currentUser.getUserId(),
+            "Updated Stock Level for " + product.getName() +" by Quantity "+ changeQty
+            );
+
+            if (changeQty<0){
+            dataController.logInventoryChange(
+                        currentUser.getUserId(),
+                        product.getProductId(),
+                        "Stock decreased by " + qty +
+                        " for Product '" + product.getName() +
+                        "'via Adjust Stock'"
+                    );
+                }
+            else{
+
+                dataController.logInventoryChange(
+                        currentUser.getUserId(),
+                        product.getProductId(),
+                        "Stock increased by " + qty +
+                        " for Product '" + product +
+                        "'via Adjust Stock'");
+            }
+
+            //dataController.evaluateStockNotification(product);
             // 4. Update Java object & refresh display
             if (changeQty > 0) {
                 product.addQuantity(qty);
@@ -146,6 +240,7 @@ public class ManageStockController {
 
             // Refresh the displayed information
             updateSelectedProductInfo();
+            updateBatchInfo();
             clearForm();
             showStatus("Stock updated successfully", "success");
 
@@ -159,6 +254,7 @@ public class ManageStockController {
         quantityField.clear();
         actionComboBox.setValue(null);
         reasonField.clear();
+        batchComboBox.setValue(null);
         statusLabel.setVisible(false);
         // Don't clear the product selection so user can make multiple adjustments
     }

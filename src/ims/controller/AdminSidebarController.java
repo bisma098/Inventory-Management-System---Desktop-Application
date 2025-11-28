@@ -35,13 +35,13 @@ public class AdminSidebarController {
     }
     @FXML
     private void showUserActivityLog(ActionEvent event) {
-        System.out.println("Navigating to User Activity Log...");
+        loadContent("/ims/view/UserActivityLogView.fxml");
         // TODO: Load User Activity Log view
     }
 
     @FXML
     private void showInventoryAuditLog(ActionEvent event) {
-        System.out.println("Navigating to Inventory Audit Log...");
+        loadContent("/ims/view/InventoryAuditLogView.fxml");
         // TODO: Load Inventory Audit Log view
     }
 

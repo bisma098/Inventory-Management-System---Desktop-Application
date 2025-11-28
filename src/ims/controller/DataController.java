@@ -19,6 +19,8 @@ public class DataController {
     private List<Supplier> suppliers;
     private List<PurchaseOrder> purchaseOrders;
     private List<PurchaseOrderLine> allPurchaseOrderLines;
+    private List<InventoryAuditLog> inventoryAuditLogs;
+    private List<UserActivityLog> userActivityLogs;
     private List<SupplierReturn> supplierReturns;
     private List<SupplierReturnLine> allSupplierReturnLines;
     private List<Warehouse> warehouses;
@@ -37,6 +39,9 @@ public class DataController {
         this.supplierReturns =new ArrayList<>();
         this.allSupplierReturnLines=new ArrayList<>();
         this.warehouses = new ArrayList<>();
+        this.userActivityLogs = new ArrayList<>();
+        this.inventoryAuditLogs = new ArrayList<>();
+
         this.batchLots= new ArrayList<>();
 
         loadAllData();
@@ -58,6 +63,10 @@ public class DataController {
         loadSuppliers();
         loadWarehouses();
         loadBatchLots(); 
+        logUserActivity(0, null);
+        loadAllUserActivityLogs();
+        loadAllInventoryAuditLogs();
+
         //loadPurchaseOrders();
         //loadSupplierReturns();
     }
@@ -542,7 +551,13 @@ public List<Product> getAllProducts() {
 public List<Category> getAllCategories() {
    return new ArrayList<>(categories);
 }
-    
+public List<UserActivityLog> getUserActivityLogs() {
+   return new ArrayList<>(userActivityLogs);
+}
+
+public List<InventoryAuditLog> getInventoryAuditLogs() {
+   return new ArrayList<>(inventoryAuditLogs);
+}
 // Getter for suppliers
 public List<Supplier> getSuppliers() {
     return new ArrayList<>(suppliers);
@@ -745,7 +760,7 @@ public boolean saveSupplierReturn(SupplierReturn returnObj) {
     }
 }
 
-public boolean updateBatchQuantity(BatchLot batch, int quantityChange) {
+    public boolean updateBatchQuantity(BatchLot batch, int quantityChange) {
     String sql = "UPDATE BatchLot SET availableQty = availableQty + ? WHERE batchId = ?";
     
     try (Connection conn = DatabaseConnection.getConnection();
@@ -762,5 +777,118 @@ public boolean updateBatchQuantity(BatchLot batch, int quantityChange) {
         return false;
     }
 }
+    public void logUserActivity(int userId, String action) {
+    String query = "INSERT INTO UserActivityLog (userId, userAction) VALUES (?, ?)";
 
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+        stmt.setInt(1, userId);
+        stmt.setString(2, action);
+        stmt.executeUpdate();
+
+        // Get generated logId
+        ResultSet rs = stmt.getGeneratedKeys();
+        int logId = 0;
+        if (rs.next()) logId = rs.getInt(1);
+
+        // Create object and store in list
+        UserActivityLog log = new UserActivityLog(userId, action);
+        log.setLogId(logId);
+        userActivityLogs.add(log);
+
+        System.out.println("User Activity Logged: " + action);
+
+    } catch (SQLException e) {
+        System.err.println("Error logging user activity: " + e.getMessage());
+    }
+}
+
+public List<UserActivityLog> loadAllUserActivityLogs() {
+    List<UserActivityLog> logs = new ArrayList<>();
+    String query = "SELECT logId, userId, userAction, timestamp FROM UserActivityLog ORDER BY logId DESC";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            UserActivityLog log = new UserActivityLog();
+            log.setLogId(rs.getInt("logId"));
+            log.setUserId(rs.getInt("userId"));
+            log.setUserAction(rs.getString("userAction"));
+            log.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+            logs.add(log);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error loading user activity logs: " + e.getMessage());
+    }
+
+    return logs;
+}
+
+public List<InventoryAuditLog> loadAllInventoryAuditLogs() {
+    List<InventoryAuditLog> logs = new ArrayList<>();
+    String query = "SELECT logId, userId, productId, description, timestamp FROM InventoryAuditLogs ORDER BY logId DESC";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            InventoryAuditLog log = new InventoryAuditLog();
+            log.setLogId(rs.getInt("logId"));
+            log.setUserId(rs.getInt("userId"));
+            log.setProductId(rs.getInt("productId"));
+            log.setDescription(rs.getString("description"));
+            log.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+            logs.add(log);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error loading inventory audit logs: " + e.getMessage());
+    }
+
+    return logs;
+}
+
+
+public List<BatchLot> getBatchesByProductId(int productId) {
+    List<BatchLot> result = new ArrayList<>();
+    for (BatchLot batch : batchLots) {      // <-- your internal list
+        if (batch.getProduct() != null && batch.getProduct().getProductId() == productId) {
+            result.add(batch);
+        }
+    }
+    return result;
+}
+
+public void logInventoryChange(int userId, int productId, String description) {
+    String query = "INSERT INTO InventoryAuditLogs (userId, productId, description) VALUES (?, ?, ?)";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+        stmt.setInt(1, userId);
+        stmt.setInt(2, productId);
+        stmt.setString(3, description);
+        stmt.executeUpdate();
+
+        // Get generated logId
+        ResultSet rs = stmt.getGeneratedKeys();
+        int logId = 0;
+        if (rs.next()) logId = rs.getInt(1);
+
+        // Make object & add to list
+        InventoryAuditLog log = new InventoryAuditLog(userId, productId, description);
+        log.setLogId(logId);
+        inventoryAuditLogs.add(log);
+
+        System.out.println("Inventory Audit Logged: " + description);
+
+    } catch (SQLException e) {
+        System.err.println("Error logging inventory change: " + e.getMessage());
+    }
+    }
 }
