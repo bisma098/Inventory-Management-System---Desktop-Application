@@ -13,6 +13,11 @@ public class Warehouse {
         this.warehouseName = warehouseName;
         this.address = address;
     }
+    public Warehouse(int warehouseId, String warehouseName) {
+        this.warehouseId = warehouseId;
+        this.warehouseName = warehouseName;
+
+    }
 
     // Getters & Setters
     public int getWarehouseId() { return warehouseId; }

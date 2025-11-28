@@ -33,6 +33,13 @@ public class BatchLot {
     // Getters & Setters
     public int getBatchId() { return batchId; }
     public void setBatchId(int batchId) { this.batchId = batchId; }
+    public String getProductName() {
+    return product != null ? product.getName() : "";
+    }
+
+    public String getWarehouseName() {
+    return warehouse != null ? warehouse.getWarehouseName() : "";
+    }
 
     public LocalDate getManufactureDate() { return manufactureDate; }
     public void setManufactureDate(LocalDate manufactureDate) { this.manufactureDate = manufactureDate; }

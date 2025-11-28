@@ -1,9 +1,16 @@
 package ims.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
+
 import java.io.IOException;
 
 public class ManagerSidebarController {
@@ -48,6 +55,11 @@ public class ManagerSidebarController {
     private void handleLogout() {
         System.out.println("Logout clicked");
     }
+
+    public void openBatchTracking(ActionEvent event)  {
+    loadContent("/ims/view/BatchTracking.fxml"); 
+    }
+
 
     private void loadContent(String fxmlPath) {
         try {

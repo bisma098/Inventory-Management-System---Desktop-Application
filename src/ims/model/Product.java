@@ -20,6 +20,10 @@ public class Product {
         this.expiryDate = expiryDate;
         this.category = category;
     }
+    public Product(int productId, String name) {
+    this.productId = productId;
+    this.name = name;
+}
 
     // Getters and Setters
     public int getProductId() { return productId; }

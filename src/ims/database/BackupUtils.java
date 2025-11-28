@@ -1,5 +1,6 @@
 package ims.database;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -8,30 +9,34 @@ import java.time.format.DateTimeFormatter;
 
 public class BackupUtils {
 
-    private static final String BACKUP_DIR = "C:SQLBackups/";
-
+    private static final String BACKUP_DIR = "C:\\SQLBackups\\";
     // SQL Server connection details
     private static final String URL = "jdbc:sqlserver://SILVERRR;databaseName=ims2;encrypt=false;";
     private static final String USER = "aleena";
     private static final String PASSWORD = "123123";
 
     public static boolean createBackup() {
+    try {
+        // Create backup directory if it doesn't exist
+        File backupDir = new File(BACKUP_DIR);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs(); // This creates all necessary parent directories
+        }
+
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement()) {
 
-            // Timestamped backup file
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
             String backupFile = BACKUP_DIR + "backup_" + timestamp + ".bak";
 
-            // SQL Server BACKUP command
             String sql = "BACKUP DATABASE [ims2] TO DISK = '" + backupFile + "' WITH FORMAT, MEDIANAME = 'DBBackup', NAME = 'Full Backup'";
-
             stmt.executeUpdate(sql);
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
     }
     public static boolean restoreBackup(String backupFilePath) {
     try {

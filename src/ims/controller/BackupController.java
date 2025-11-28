@@ -25,23 +25,50 @@ public class BackupController {
     @FXML
     private Button restoreButton;
     @FXML
+    private Button backupButton; // Add this line
+    @FXML
     private Label messageLabel;
     @FXML
-private RestoreController restoreController; // inject it or get reference
+    private RestoreController restoreController;
 
-@FXML
-private void handleRestore() {
+    // Add this backup handler method
+    @FXML
+    private void handleBackup() {
+        boolean success = BackupUtils.createBackup();
+        if (success) {
+            messageLabel.setText("Backup created successfully!");
+            loadBackupFiles(); // Refresh the table to show new backup
+        } else {
+            messageLabel.setText("Backup failed!");
+        }
+    }
+
+    @FXML
+    private void handleRestore() {
     Backup selected = backupTable.getSelectionModel().getSelectedItem();
     if (selected != null) {
-        boolean ok = BackupUtils.restoreBackup("C:\\\\Users\\\\User\\\\bismaBranch\\\\Inventory-Management-System---Desktop-Application\\\\backups\\\\" + selected.getFileName());
+        boolean ok = BackupUtils.restoreBackup("C:\\SQLBackups\\" + selected.getFileName());
         messageLabel.setText(ok ? "Restore completed!" : "Restore failed!");
         if (ok && restoreController != null) {
-            restoreController.addRestoreRecord(selected.getFileName(), "adminUser"); // replace with actual user
+            restoreController.addRestoreRecord(selected.getFileName(), "adminUser");
         }
     } else {
         messageLabel.setText("Select a backup first!");
     }
-}
+    }
+
+    private void loadBackupFiles() {
+    backupList.clear();
+    File folder = new File("C:\\SQLBackups\\");
+    if (folder.exists()) {
+        for (File file : folder.listFiles()) {
+            if (file.isFile() && file.getName().endsWith(".bak")) {
+                backupList.add(new Backup(file.getName(), LocalDateTime.ofEpochSecond(file.lastModified()/1000,0,java.time.ZoneOffset.UTC), "SUCCESS"));
+            }
+        }
+    }
+    backupTable.setItems(backupList);
+    }
 
     private ObservableList<Backup> backupList = FXCollections.observableArrayList();
 
@@ -55,18 +82,5 @@ private void handleRestore() {
         loadBackupFiles();
     }
 
-    private void loadBackupFiles() {
-        backupList.clear();
-        File folder = new File("backups/");
-        if (folder.exists()) {
-            for (File file : folder.listFiles()) {
-                if (file.isFile() && file.getName().endsWith(".bak")) {
-                    backupList.add(new Backup(file.getName(), LocalDateTime.ofEpochSecond(file.lastModified()/1000,0,java.time.ZoneOffset.UTC), "SUCCESS"));
-                }
-            }
-        }
-        backupTable.setItems(backupList);
-    }
 
-    
 }
