@@ -54,6 +54,12 @@ public class AdminSidebarController {
         System.out.println("Navigating to Users...");
         // TODO: Load Users management view
     }
+
+      @FXML
+    private void showWarehouse() {
+        loadContent("/ims/view/Warehouse.fxml");
+
+    }
     
     private void loadContent(String fxmlPath) {
         try {

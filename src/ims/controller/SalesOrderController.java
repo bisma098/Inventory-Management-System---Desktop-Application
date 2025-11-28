@@ -13,48 +13,53 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import java.time.format.DateTimeFormatter;
 
-public class PurchaseOrderController {
+public class SalesOrderController {
     
-    @FXML private TableView<PurchaseOrder> purchaseOrdersTable;
-    @FXML private TableView<PurchaseOrderLine> orderLinesTable;
+    @FXML private TableView<SalesOrder> salesOrdersTable;
+    @FXML private TableView<SalesOrderLine> orderLinesTable;
     @FXML private VBox orderDetailsSection;
+    @FXML private Label customerNameLabel;
+    @FXML private Label customerContactLabel;
+    @FXML private Label detailsTitle;
+    @FXML private VBox customerDetailsBox;
+
     
     private DataController dataController;
-    private ObservableList<PurchaseOrder> purchaseOrdersList;
-    private ObservableList<PurchaseOrderLine> currentOrderLinesList;
-    private PurchaseOrder selectedOrder;
+    private ObservableList<SalesOrder> salesOrdersList;
+    private ObservableList<SalesOrderLine> currentOrderLinesList;
+    private SalesOrder selectedOrder;
     
     @FXML
     public void initialize() {
         this.dataController = DataController.getInstance();
-        this.purchaseOrdersList = FXCollections.observableArrayList();
+        this.salesOrdersList = FXCollections.observableArrayList();
         this.currentOrderLinesList = FXCollections.observableArrayList();
         
-        setupPurchaseOrdersTable();
+        setupSalesOrdersTable();
         setupOrderLinesTable();
-        loadPurchaseOrders();
+        loadSalesOrders();
         
         // Initially hide the details section
         orderDetailsSection.setVisible(false);
     }
     
-    private void setupPurchaseOrdersTable() {
+    private void setupSalesOrdersTable() {
         // Get the columns
-        TableColumn<PurchaseOrder, Integer> orderIdCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(0);
-        TableColumn<PurchaseOrder, String> supplierCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(1);
-        TableColumn<PurchaseOrder, String> dateCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(2);
-        TableColumn<PurchaseOrder, Double> totalCol = (TableColumn<PurchaseOrder, Double>) purchaseOrdersTable.getColumns().get(3);
-        TableColumn<PurchaseOrder, Integer> itemsCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(4);
-        TableColumn<PurchaseOrder, String> actionCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(5);
+        TableColumn<SalesOrder, Integer> orderIdCol = (TableColumn<SalesOrder, Integer>) salesOrdersTable.getColumns().get(0);
+        TableColumn<SalesOrder, String> customerCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(1);
+        TableColumn<SalesOrder, String> dateCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(2);
+        TableColumn<SalesOrder, Double> totalCol = (TableColumn<SalesOrder, Double>) salesOrdersTable.getColumns().get(3);
+        TableColumn<SalesOrder, Integer> itemsCol = (TableColumn<SalesOrder, Integer>) salesOrdersTable.getColumns().get(4);
+        TableColumn<SalesOrder, String> actionCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(5);
         
-         purchaseOrdersTable.setItems(purchaseOrdersList);
+         salesOrdersTable.setItems(salesOrdersList);
         // Set up cell value factories for purchase orders
         orderIdCol.setCellValueFactory(cellData -> 
             new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
         
-        supplierCol.setCellValueFactory(cellData -> {
-            Supplier supplier = cellData.getValue().getSupplier();
-            return new SimpleStringProperty(supplier != null ? supplier.getName() : "Unknown");
+        customerCol.setCellValueFactory(cellData -> {
+            Customer customer = cellData.getValue().getCustomer();
+            return new SimpleStringProperty(customer != null ? customer.getName() : "Unknown");
         });
         
         dateCol.setCellValueFactory(cellData -> {
@@ -64,7 +69,7 @@ public class PurchaseOrderController {
         
         totalCol.setCellValueFactory(cellData -> {
             double total = cellData.getValue().getOrderLines().stream()
-                    .mapToDouble(PurchaseOrderLine::calculateLineTotal)
+                    .mapToDouble(line -> line.getQuantity() * line.getProduct().getPrice())
                     .sum();
             return new SimpleDoubleProperty(total).asObject();
         });
@@ -74,12 +79,12 @@ public class PurchaseOrderController {
         
         // Action column with "View Details" button
         actionCol.setCellValueFactory(cellData -> new SimpleStringProperty("View Details"));
-        actionCol.setCellFactory(column -> new TableCell<PurchaseOrder, String>() {
+        actionCol.setCellFactory(column -> new TableCell<SalesOrder, String>() {
             private final Button viewDetailsButton = new Button("View Details");
             {
                 viewDetailsButton.setStyle("-fx-background-color: linear-gradient(to bottom, #008080, #006666); -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 4 8;");
                 viewDetailsButton.setOnAction(event -> {
-                    PurchaseOrder order = getTableView().getItems().get(getIndex());
+                    SalesOrder order = getTableView().getItems().get(getIndex());
                     showOrderDetails(order);
                 });
             }
@@ -96,7 +101,7 @@ public class PurchaseOrderController {
         });
         
         // Format currency column
-        totalCol.setCellFactory(tc -> new TableCell<PurchaseOrder, Double>() {
+        totalCol.setCellFactory(tc -> new TableCell<SalesOrder, Double>() {
             @Override
             protected void updateItem(Double total, boolean empty) {
                 super.updateItem(total, empty);
@@ -110,17 +115,17 @@ public class PurchaseOrderController {
             }
         });
         
-        purchaseOrdersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        salesOrdersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
     private void setupOrderLinesTable() {
         // Get the columns
-        TableColumn<PurchaseOrderLine, String> productCol = (TableColumn<PurchaseOrderLine, String>) orderLinesTable.getColumns().get(0);
-        TableColumn<PurchaseOrderLine, String> warehouseCol = (TableColumn<PurchaseOrderLine, String>) orderLinesTable.getColumns().get(1);
-        TableColumn<PurchaseOrderLine, String> batchCol = (TableColumn<PurchaseOrderLine, String>) orderLinesTable.getColumns().get(2); 
-        TableColumn<PurchaseOrderLine, Integer> quantityCol = (TableColumn<PurchaseOrderLine, Integer>) orderLinesTable.getColumns().get(3);
-        TableColumn<PurchaseOrderLine, Double> unitPriceCol = (TableColumn<PurchaseOrderLine, Double>) orderLinesTable.getColumns().get(4);
-        TableColumn<PurchaseOrderLine, Double> lineTotalCol = (TableColumn<PurchaseOrderLine, Double>) orderLinesTable.getColumns().get(5);
+        TableColumn<SalesOrderLine, String> productCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(0);
+        TableColumn<SalesOrderLine, String> warehouseCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(1);
+        TableColumn<SalesOrderLine, String> batchCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(2); 
+        TableColumn<SalesOrderLine, Integer> quantityCol = (TableColumn<SalesOrderLine, Integer>) orderLinesTable.getColumns().get(3);
+        TableColumn<SalesOrderLine, Double> unitPriceCol = (TableColumn<SalesOrderLine, Double>) orderLinesTable.getColumns().get(4);
+        TableColumn<SalesOrderLine, Double> lineTotalCol = (TableColumn<SalesOrderLine, Double>) orderLinesTable.getColumns().get(5);
 
         
         // Set up cell value factories for order lines
@@ -141,11 +146,11 @@ public class PurchaseOrderController {
             new SimpleDoubleProperty(cellData.getValue().getUnitPrice()).asObject());
         
         lineTotalCol.setCellValueFactory(cellData -> 
-            new SimpleDoubleProperty(cellData.getValue().calculateLineTotal()).asObject());
+            new SimpleDoubleProperty(cellData.getValue().getQuantity() * cellData.getValue().getProduct().getPrice()).asObject());
         
         // Batch column
         batchCol.setCellValueFactory(cellData -> {
-            BatchLot batchLot = cellData.getValue().getBatchLot();
+            BatchLot batchLot = cellData.getValue().getBatch();
             if (batchLot != null) {
                 return new SimpleStringProperty("Batch #" + batchLot.getBatchId());
             } else {
@@ -154,7 +159,7 @@ public class PurchaseOrderController {
         });
         
         // Format currency columns
-        unitPriceCol.setCellFactory(tc -> new TableCell<PurchaseOrderLine, Double>() {
+        unitPriceCol.setCellFactory(tc -> new TableCell<SalesOrderLine, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
                 super.updateItem(price, empty);
@@ -166,7 +171,7 @@ public class PurchaseOrderController {
             }
         });
         
-        lineTotalCol.setCellFactory(tc -> new TableCell<PurchaseOrderLine, Double>() {
+        lineTotalCol.setCellFactory(tc -> new TableCell<SalesOrderLine, Double>() {
             @Override
             protected void updateItem(Double total, boolean empty) {
                 super.updateItem(total, empty);
@@ -177,6 +182,7 @@ public class PurchaseOrderController {
                     setStyle("-fx-font-weight: bold");
                 }
             }
+
         });
         
         
@@ -184,14 +190,14 @@ public class PurchaseOrderController {
         orderLinesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
-    private void loadPurchaseOrders() {
-        purchaseOrdersList.clear();
-        purchaseOrdersList.addAll(dataController.getPurchaseOrders());
+    private void loadSalesOrders() {
+        salesOrdersList.clear();
+        salesOrdersList.addAll(dataController.getSalesOrders());
       
     }
     
-    private void showOrderDetails(PurchaseOrder order) {
-        this.selectedOrder = order;
+    private void showOrderDetails(SalesOrder order) {
+        selectedOrder = order;
         
         // Load order lines for the selected order
         currentOrderLinesList.clear();
@@ -199,8 +205,12 @@ public class PurchaseOrderController {
         
         // Update the details section title
         Label titleLabel = (Label) orderDetailsSection.getChildren().get(0);
-        titleLabel.setText("Order Lines for Order ID- " + order.getOrderId());
+        titleLabel.setText("Order Details for Sales Order ID- " + order.getOrderId());
         
+        Customer c = order.getCustomer();
+        customerNameLabel.setText("Name: " + c.getName());
+        customerContactLabel.setText("Contact: " + c.getContactInfo());
+
         // Show the details section
         orderDetailsSection.setVisible(true);
         
@@ -216,8 +226,8 @@ public class PurchaseOrderController {
 @FXML
 private void showCreateForm() {
     try {
-        BorderPane root = (BorderPane) purchaseOrdersTable.getScene().getRoot();
-        root.setCenter(FXMLLoader.load(getClass().getResource("/ims/view/CreatePurchaseOrder.fxml")));
+        BorderPane root = (BorderPane) salesOrdersTable.getScene().getRoot();
+        root.setCenter(FXMLLoader.load(getClass().getResource("/ims/view/CreateSalesOrder.fxml")));
     } catch (Exception e) {
         e.printStackTrace();
     }

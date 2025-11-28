@@ -3,10 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
 
 <ScrollPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ims.controller.CreateSupplierReturnController"
+            fx:controller="ims.controller.CreateCustomerReturnController"
             fitToWidth="true"
             hbarPolicy="NEVER">
 
@@ -24,7 +25,7 @@
                         style="-fx-background-color:#666; -fx-text-fill:white;
                                -fx-font-weight:bold;-fx-padding:8 16;"/>
 
-                <Label text="Create Supplier Return"
+                <Label text="Create Customer Return"
                        style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#008080;"/>
             </HBox>
 
@@ -34,15 +35,27 @@
                          -fx-border-radius:10; -fx-padding:20;
                          -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.1),5,0.3,2,2);">
 
-                <!-- Supplier -->
+                <!-- Customer Selection -->
                 <HBox spacing="15" alignment="CENTER_LEFT">
-                    <Label text="Supplier:*"
+                    <Label text="Customer:*"
                            style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:120;"/>
 
-                    <ComboBox fx:id="supplierComboBox" prefWidth="400"
+                    <ComboBox fx:id="customerComboBox" prefWidth="400"
                               style="-fx-background-color:white; -fx-border-color:#008080;"/>
 
                     <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+                </HBox>
+
+                <!-- Sales Order Selection (Optional) -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Sales Order:"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:120;"/>
+
+                    <ComboBox fx:id="salesOrderComboBox" prefWidth="400"
+                              style="-fx-background-color:white; -fx-border-color:#008080;"
+                              promptText="Select Sales Order (Optional)"/>
+
+                    <Label text="Optional" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
                 </HBox>
 
                 <!-- Reason -->
@@ -50,11 +63,32 @@
                     <Label text="Return Reason:*"
                            style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:120;"/>
 
-                    <TextField fx:id="reasonField" prefWidth="400"
-                               style="-fx-background-color:white; -fx-border-color:#008080;"
-                               promptText="e.g., Defective, Wrong item, Expired"/>
+                    <ComboBox fx:id="reasonComboBox" prefWidth="400"
+                              style="-fx-background-color:white; -fx-border-color:#008080;"
+                              promptText="Select return reason">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Defective Product"/>
+                                <String fx:value="Wrong Item Received"/>
+                                <String fx:value="Damaged During Shipping"/>
+                                <String fx:value="Customer Changed Mind"/>
+                                <String fx:value="Quality Issues"/>
+                                <String fx:value="Other"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
 
                     <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+                </HBox>
+
+                <!-- Additional Reason (if Other selected) -->
+                <HBox spacing="15" alignment="CENTER_LEFT" fx:id="otherReasonBox" visible="false" managed="false">
+                    <Label text="Other Reason:"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:120;"/>
+
+                    <TextField fx:id="otherReasonField" prefWidth="400"
+                               style="-fx-background-color:white; -fx-border-color:#008080;"
+                               promptText="Please specify reason"/>
                 </HBox>
 
                 <!-- Add Return Item -->
@@ -81,7 +115,7 @@
                         <Label text="Batch" GridPane.rowIndex="0" GridPane.columnIndex="1"
                                style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
 
-                        <Label text="Available Qty" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                        <Label text="Sold Qty" GridPane.rowIndex="0" GridPane.columnIndex="2"
                                style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
 
                         <Label text="Return Qty" GridPane.rowIndex="0" GridPane.columnIndex="3"
@@ -99,7 +133,7 @@
                                   style="-fx-background-color:white; -fx-border-color:#008080;"
                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                        <Label fx:id="availableQtyLabel" text="0"
+                        <Label fx:id="soldQtyLabel" text="0"
                                prefWidth="120"
                                style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-padding:6;"
                                GridPane.rowIndex="1" GridPane.columnIndex="2"/>
@@ -113,13 +147,22 @@
                                        -fx-text-fill:white; -fx-font-weight:bold; -fx-padding:8 12;"
                                 GridPane.rowIndex="1" GridPane.columnIndex="4"/>
                     </GridPane>
+                    
+                    <!-- Customer Purchase Info -->
+                    <VBox fx:id="purchaseInfoBox" spacing="5" visible="false" managed="false"
+                          style="-fx-background-color:#E8F5E8; -fx-border-color:#4CAF50; -fx-border-width:1; -fx-padding:10;">
+                        <Label fx:id="purchaseInfoLabel" text="Purchase information will appear here"
+                               style="-fx-text-fill:#2E7D32; -fx-font-weight:bold;"/>
+                        <Label fx:id="salesOrderInfoLabel" text=""
+                               style="-fx-text-fill:#2E7D32;"/>
+                    </VBox>
                 </VBox>
 
                 <Label fx:id="statusLabel"
                        style="-fx-text-fill:#008080; -fx-font-weight:bold;"
                        visible="false"/>
 
-                <!-- Table -->
+                <!-- Return Items Table -->
                 <VBox spacing="10">
                     <Label text="Return Items"
                            style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-font-size:16px;"/>
@@ -148,7 +191,7 @@
 
                 <!-- Buttons -->
                 <HBox spacing="15" alignment="CENTER">
-                    <Button text="Create Supplier Return" onAction="#createSupplierReturn"
+                    <Button text="Create Customer Return" onAction="#createCustomerReturn"
                             style="-fx-background-color:linear-gradient(to bottom,#008080,#006666);
                                    -fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14;
                                    -fx-padding:10 20; -fx-pref-width:200;"/>

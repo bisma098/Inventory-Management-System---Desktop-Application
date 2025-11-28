@@ -8,16 +8,14 @@ public class Product {
     private String SKU;
     private double price;
     private int quantity;
-    private LocalDate expiryDate;
     private Category category;
 
-    public Product(int productId, String name, String SKU, double price, int quantity, LocalDate expiryDate, Category category) {
+    public Product(int productId, String name, String SKU, double price, int quantity, Category category) {
         this.productId = productId;
         this.name = name;
         this.SKU = SKU;
         this.price = price;
         this.quantity = quantity;
-        this.expiryDate = expiryDate;
         this.category = category;
     }
 
@@ -38,9 +36,6 @@ public class Product {
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public void addQuantity(int quantity) { this.quantity += quantity; }
     public void removeQuantity(int quantity) { this.quantity -= quantity; }
-
-    public LocalDate getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }

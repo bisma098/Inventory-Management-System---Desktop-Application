@@ -20,6 +20,11 @@
 
             <Pane HBox.hgrow="ALWAYS"/>
 
+            <!-- Added Welcome Label -->
+            <Label fx:id="welcomeLabel" 
+                   
+                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0 15 0 0;"/>
+
             <Button text="Profile" onAction="#openProfile"
                     style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
 

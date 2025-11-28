@@ -74,4 +74,9 @@ public class BatchLot {
             System.out.println("Invalid quantity update. Available: " + availableQuantity);
         }
     }
+
+    public void addQuantity(int qty)
+    {
+        availableQuantity+=qty;
+    }
 }

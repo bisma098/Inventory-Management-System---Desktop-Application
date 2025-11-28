@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.ProductController"
+      spacing="20"
+      stylesheets="@dashboard.css"
+      styleClass="dashboard-content">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Title -->
+    <Label text="Products" styleClass="section-title"/>
+
+    <!-- Search Bar -->
+    <HBox spacing="10">
+        <Label text="Search:"/>
+        <TextField fx:id="searchField" promptText="Search product"/>
+        <Button text="Search" fx:id="btnSearch" onAction="#searchProduct"/>
+    </HBox>
+
+    <!-- Products Table -->
+    <VBox spacing="10">
+        <Label text="Product List" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <TableView fx:id="productTable" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="colName" text="Name" prefWidth="150"/>
+                <TableColumn fx:id="colSKU" text="SKU" prefWidth="100"/>
+                <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
+                <TableColumn fx:id="colQty" text="Qty" prefWidth="80"/>
+                <TableColumn fx:id="colExpiry" text="Expiry" prefWidth="120"/>
+                <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Add Product Section -->
+    <VBox spacing="15">
+        <Label text="Add Product" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+        <GridPane hgap="10" vgap="10">
+            <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="addNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="SKU:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="addSKUField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Price:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="addPriceField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Qty:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="addQtyField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Expiry:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="addExpiryField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Category:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="addCategoryField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <HBox spacing="10">
+            <Button text="Add Product" fx:id="btnAdd" onAction="#addProduct"/>
+            <Button text="Delete Selected" fx:id="btnDelete" onAction="#deleteProduct"/>
+        </HBox>
+    </VBox>
+
+</VBox>

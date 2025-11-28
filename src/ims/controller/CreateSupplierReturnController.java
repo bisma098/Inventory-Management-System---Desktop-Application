@@ -406,6 +406,12 @@ private void createSupplierReturn() {
                 return;
             }
 
+            User currentUser = dataController.getCurrentUser();
+            dataController.logUserActivity(
+            currentUser.getUserId(),
+            "Created Supplier Return #" + newReturn.getId() +" with Supplier "+ newReturn.getSupplier().getName()
+            );
+
             // Update batch quantities and product quantities
             for (SupplierReturnLine line : newReturn.getReturnLines()) {
                 BatchLot batch = line.getBatch();
@@ -417,6 +423,17 @@ private void createSupplierReturn() {
                     // Decrease product quantity
                     line.getProduct().removeQuantity(line.getQuantity());
                     dataController.updateProductQuantity(line.getProduct(), -line.getQuantity());
+
+                    // Log inventory change for each product in the order
+                        dataController.logInventoryChange(
+                        currentUser.getUserId(),
+                        line.getProduct().getProductId(),
+                        "Stock decreased by " + line.getQuantity() +
+                        " for Product '" + line.getProduct().getName() +
+                        "' via Supplier Return #" + newReturn.getId()
+                    );
+
+                    dataController.evaluateStockNotification(line.getProduct());
                 }
             }
 

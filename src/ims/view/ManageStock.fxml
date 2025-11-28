@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.ManageStockController"
+      fitToWidth="true"
+      hbarPolicy="NEVER">
+
+    <content>
+        <VBox spacing="20"
+        stylesheets="@dashboard.css"
+        styleClass="dashboard-content"
+        alignment="TOP_CENTER">
+
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Stock Adjustment" styleClass="section-title"/>
+
+            <!-- Stock Adjustment Form -->
+            <VBox spacing="20" prefWidth="500" styleClass="form-container">
+                
+                <!-- Product Selection -->
+                <VBox spacing="8">
+                    <Label text="Product *" styleClass="form-label"/>
+                    <ComboBox fx:id="productComboBox" styleClass="form-field" prefWidth="450"/>
+                    <Label fx:id="currentStockLabel" text="Current Stock: 0" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                </VBox>
+
+                <!-- Batch Selection -->
+                <VBox spacing="8">
+                    <Label text="Batch" styleClass="form-label"/>
+                    <ComboBox fx:id="batchComboBox" styleClass="form-field" prefWidth="450"/>
+                    <Label fx:id="batchStockLabel" text="Batch Stock: 0" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                </VBox>
+
+                <!-- Action Type -->
+                <VBox spacing="8">
+                    <Label text="Action *" styleClass="form-label"/>
+                    <ComboBox fx:id="actionComboBox" styleClass="form-field" prefWidth="450"/>
+                </VBox>
+
+                <!-- Quantity -->
+                <VBox spacing="8">
+                    <Label text="Quantity *" styleClass="form-label"/>
+                    <TextField fx:id="quantityField" styleClass="form-field" prefWidth="450" promptText="Enter quantity"/>
+                </VBox>
+
+                <!-- Reason -->
+                <VBox spacing="8">
+                    <Label text="Reason *" styleClass="form-label"/>
+                    <TextArea fx:id="reasonField" styleClass="form-field" prefWidth="450" prefHeight="80"
+                            promptText="Enter reason for stock adjustment..."/>
+                </VBox>
+
+                <!-- Selected Product Info (Visible when product is selected) -->
+                <VBox fx:id="selectedProductInfo" spacing="10" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-padding: 15;" visible="false">
+                    <Label text="Selected Product Details" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <GridPane hgap="10" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints prefWidth="120"/>
+                            <ColumnConstraints prefWidth="300"/>
+                        </columnConstraints>
+                        
+                        <Label text="Product Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="selectedProductName" text="" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        
+                        <Label text="SKU:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="selectedProductSku" text="" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Category:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="selectedProductCategory" text="" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Current Stock:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="selectedProductStock" text="" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Status Message -->
+                <Label fx:id="statusLabel" style="-fx-text-fill: #f44336; -fx-font-weight: bold;" visible="false"/>
+
+                <!-- Update Button -->
+                <Button text="Update Stock" onAction="#updateStock" styleClass="primary-button" prefWidth="450" prefHeight="40"/>
+            </VBox>
+        </VBox> 
+    </content>
+</ScrollPane>

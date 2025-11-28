@@ -89,30 +89,24 @@ public class InventoryController {
         });
         categoryCol.setPrefWidth(120);
 
-        TableColumn<Product, String> expiryCol = new TableColumn<>("Expiry Date");
-        expiryCol.setCellValueFactory(cellData -> {
-            LocalDate expiry = cellData.getValue().getExpiryDate();
-            return new SimpleStringProperty(expiry != null ? expiry.toString() : "N/A");
-        });
-        expiryCol.setPrefWidth(100);
 
         // Add columns to table
-        productsTable.getColumns().addAll(idCol, nameCol, skuCol, priceCol, quantityCol, categoryCol, expiryCol);
+        productsTable.getColumns().addAll(idCol, nameCol, skuCol, priceCol, quantityCol, categoryCol);
 
         productsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
     private void loadInventoryData() {
-        ObservableList<Product> productList = FXCollections.observableArrayList(dataController.getAllProducts());
+        ObservableList<Product> productList = FXCollections.observableArrayList(dataController.getProducts());
         productsTable.setItems(productList);
     }
     
     private void updateStats() {
-        int totalProducts = dataController.getAllProducts().size();
+        int totalProducts = dataController.getProducts().size();
         int lowStock = 0;
         int outOfStock = 0;
         
-        for (Product product : dataController.getAllProducts()) {
+        for (Product product : dataController.getProducts()) {
             if (product.getQuantity() == 0) {
                 outOfStock++;
             } else if (product.getQuantity() < 10) {
