@@ -16,17 +16,13 @@ public class Category {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    // Operations
-    public void addCategory() {
-        System.out.println("Category added: " + name);
+    @Override
+    public String toString() {
+        return name; // Important for TableView to show category name
     }
 
-    public void updateCategory(String newName) {
-        this.name = newName;
-        System.out.println("Category updated to: " + newName);
-    }
-
-    public void deleteCategory() {
-        System.out.println("Category deleted: " + name);
-    }
+    // Dummy operations (optional for testing)
+    public void addCategory() { System.out.println("Category added: " + name); }
+    public void updateCategory(String newName) { this.name = newName; System.out.println("Category updated: " + newName); }
+    public void deleteCategory() { System.out.println("Category deleted: " + name); }
 }

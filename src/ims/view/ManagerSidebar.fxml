@@ -27,6 +27,7 @@
         <Button text="🔄 Supplier Returns" fx:id="btnSupplierReturn" styleClass="nav-btn" onAction="#showSupplierReturns"/>
         <Button text="⚙ Adjust Stock" fx:id="btnAdjustStock" styleClass="nav-btn" onAction="#showAdjustStock"/>
         <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
-    </VBox>
+        <Button text="🏠 Warehouse" fx:id="btnWarehouse" styleClass="nav-btn" onAction="#showWarehouse"/>
+            </VBox>
 
 </VBox>

@@ -16,10 +16,18 @@ public class ManagerSidebarController {
         loadContent("/ims/view/Inventory.fxml");
     }
 
+
     @FXML
     private void showProducts() {
-        System.out.println("Products clicked");
+        loadContent("/ims/view/Products.fxml");
     }
+
+    @FXML
+    private void showWarehouse() {
+        loadContent("/ims/view/Warehouse.fxml");
+
+    }
+
 
     @FXML
     private void showPurchaseOrders() {

@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     private static final String URL =
-            "jdbc:sqlserver://DESKTOP-3C2QQNA;databaseName=ims;encrypt=false;";
-    private static final String USER = "bisma";
-    private static final String PASSWORD = "bix098";
+            "jdbc:sqlserver://DESKTOP-90E7HB0\\SQLEXPRESS;databaseName=ims;encrypt=false;";
+    private static final String USER = "test1";
+    private static final String PASSWORD = "123123";
 
     static {
         try {
