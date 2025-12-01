@@ -3,14 +3,27 @@ package ims.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import javafx.scene.Node;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class AdminSidebarController {
 
     @FXML
-    private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers;
+    private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers,btnSuppliers;
 
     // ================== EVENT HANDLERS ==================
 
@@ -19,11 +32,36 @@ public class AdminSidebarController {
         loadContent("/ims/view/Inventory.fxml");
     }
 
-    @FXML
-    private void showReports(ActionEvent event) {
-        System.out.println("Navigating to Reports...");
-        // TODO: Load Reports view
+
+  
+@FXML
+private void showReports(ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ims/view/ReportsDialog.fxml"));
+        Parent root = loader.load();
+
+        ReportsDialogController controller = loader.getController();
+        controller.setMainStage((Stage)((Node)event.getSource()).getScene().getWindow());
+
+        Scene scene = new Scene(root);
+        //scene.getStylesheets().add(getClass().getResource("/ims/css/reports-dialog.css").toExternalForm());
+         // ADD YOUR POPUP CSS
+        scene.getStylesheets().add(getClass().getResource("/ims/view/popup.css").toExternalForm());
+        Stage popup = new Stage();
+        controller.setPopupStage(popup);   // << set popup stage
+
+        popup.setScene(scene);
+        popup.setTitle("Select Report");
+        popup.setResizable(false);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.centerOnScreen();
+        popup.show();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     @FXML
     private void showUserActivityLog(ActionEvent event) {
@@ -38,10 +76,28 @@ public class AdminSidebarController {
     }
 
     @FXML
-    private void showCategories(ActionEvent event) {
-        System.out.println("Navigating to Categories...");
-        // TODO: Load Categories management view
+   
+private void showCategories(ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ims/view/AddCategories.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        
+        Scene scene = new Scene(root, 1200, 700); // 🌟 FIXED SIZE SCENE
+        stage.setScene(scene);
+        stage.setResizable(false); // 🔒 PREVENT RESIZING
+        
+        stage.show();
+
+        System.out.println("Navigated to Add Categories page.");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Failed to load AddCategories.fxml");
     }
+}
+
 
     @FXML
     private void showProductTracking(ActionEvent event) {
@@ -82,7 +138,28 @@ public class AdminSidebarController {
         }
         return null;
     }
-    
+    @FXML
+private void showSuppliers(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ims/view/AddSupplier.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root, 1200, 700); // Fixed size scene
+            stage.setScene(scene);
+            stage.setResizable(false); // Prevent resizing
+
+            stage.show();
+
+            System.out.println("Navigated to Add Supplier page.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to load AddSupplier.fxml");
+        }
+
+    }
     @FXML
     public void initialize() {
         // Use Platform.runLater to delay the initial load until the scene is fully set up

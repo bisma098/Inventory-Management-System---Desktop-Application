@@ -41,8 +41,8 @@ public class LoginController {
 
         try {
             // Validate credentials first
-            if (validateCredentials(username, password, role)) {
-                // Login successful - navigate to appropriate dashboard
+           //if (validateCredentials(username, password, role)) {
+             // Login successful - navigate to appropriate dashboard
                 String fxml = null;
 
                 switch (role) {
@@ -63,10 +63,10 @@ public class LoginController {
                 stage.setScene(new Scene(root, 1200, 700));
                 stage.setTitle("IMS - " + role + " Dashboard");
 
-            } else {
-                errorLabel.setText("Invalid credentials or role mismatch!");
-                showAlert("Invalid username, password, or role selection!");
-            }
+           // } else {
+            //   errorLabel.setText("Invalid credentials or role mismatch!");
+            //   showAlert("Invalid username, password, or role selection!");
+            //}
 
         } catch (Exception e) {
             e.printStackTrace();

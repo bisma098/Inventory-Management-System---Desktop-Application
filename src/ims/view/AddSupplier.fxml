@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.AddSupplierController"
+            prefWidth="800" prefHeight="600"
+            style="-fx-background-color: #ffffffff;">
+
+    <!-- HEADER -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #ffffffff; -fx-padding: 15;" alignment="CENTER_LEFT">
+
+            <!-- Title -->
+            <Label text="🏭 Suppliers"
+                   style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+
+            <Pane HBox.hgrow="ALWAYS"/>  <!-- pushes Back button to right -->
+
+            <!-- Back Button -->
+            <Button text="⟵ Back"
+                    onAction="#goBack"
+                    style="-fx-background-color:  #008080; -fx-text-fill: white; -fx-font-size: 14px;
+                           -fx-padding: 6 15; -fx-background-radius: 6;"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20;">
+
+            <!-- Supplier Table -->
+            <TableView fx:id="tblSuppliers" style="-fx-background-color: #ffffffff; -fx-text-fill: white;">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="80"
+                                 style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+                    <TableColumn fx:id="colName" text="Supplier Name" prefWidth="200"
+                                 style="-fx-alignment: CENTER_LEFT; -fx-font-weight: normal;"/>
+                    <TableColumn fx:id="colContact" text="Contact" prefWidth="150"
+                                 style="-fx-alignment: CENTER_LEFT; -fx-font-weight: normal;"/>
+                    <TableColumn fx:id="colEmail" text="Email" prefWidth="200"
+                                 style="-fx-alignment: CENTER_LEFT; -fx-font-weight: normal;"/>
+                </columns>
+            </TableView>
+
+            <!-- Add Supplier Button -->
+            <Button text="➕ Add Supplier"
+                    fx:id="btnAddSupplier"
+                    onAction="#addSupplier"
+                    style="-fx-background-color: #008080; -fx-text-fill: white; -fx-font-size: 16px;
+                           -fx-padding: 10 20; -fx-background-radius: 8;"/>
+        </VBox>
+    </center>
+
+</BorderPane>

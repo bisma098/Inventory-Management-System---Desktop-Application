@@ -3,16 +3,20 @@ package ims.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
 
-    private static final String URL = "jdbc:sqlserver://DESKTOP-3C2QQNA;databaseName=ims;encrypt=false;";
-    private static final String USER = "bisma";
-    private static final String PASSWORD = "bix098";
+    private static final String URL = "jdbc:sqlserver://DESKTOP-VC2U0ES;databaseName=ims_db;encrypt=false;";
+    private static final String USER = "aleena2";
+    private static final String PASSWORD = "123456";
 
     private static Connection connection;
 
     static {
+        System.out.println("Java version: " + System.getProperty("java.version"));
+        System.out.println("Classpath: " + System.getProperty("java.class.path"));
+
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             System.out.println("SQL Server JDBC Driver loaded successfully.");
@@ -25,6 +29,7 @@ public class DatabaseConnection {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
+                System.out.println("Attempting connection to: " + URL);
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
                 System.out.println("Connected to SQL Server Successfully!");
             }

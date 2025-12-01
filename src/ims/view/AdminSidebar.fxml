@@ -30,6 +30,8 @@
         <Button text="🗂 Categories" fx:id="btnCategories" styleClass="nav-btn" onAction="#showCategories"/>
         <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
         <Button text="👥 Users" fx:id="btnUsers" styleClass="nav-btn" onAction="#showUsers"/>
+        <Button text="👥 Suppliers" fx:id="btnSuppliers" styleClass="nav-btn" onAction="#showSuppliers"/>
+
     </VBox>
 
 </VBox>

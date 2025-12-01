@@ -1,6 +1,7 @@
 package ims.model;
 
 public class Category {
+
     private int id;
     private String name;
 
@@ -9,14 +10,30 @@ public class Category {
         this.name = name;
     }
 
+    // -------------------------
     // Getters & Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // -------------------------
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public int getId() { 
+        return id; 
+    }
 
-    // Operations
+    public void setId(int id) { 
+        this.id = id; 
+    }
+
+    public String getName() { 
+        return name; 
+    }
+
+    public void setName(String name) { 
+        this.name = name; 
+    }
+
+    // -------------------------
+    // Basic operations (your original code)
+    // -------------------------
+
     public void addCategory() {
         System.out.println("Category added: " + name);
     }
