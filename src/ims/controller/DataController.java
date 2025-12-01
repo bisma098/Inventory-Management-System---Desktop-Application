@@ -77,6 +77,8 @@ public void loadAllData() {
     loadSupplierReturns();
     loadSalesOrders();
     loadCustomerReturns();
+    loadAllUserActivityLogs();
+    loadAllInventoryAuditLogs();
     loadNotifications();
 
 }
@@ -112,17 +114,11 @@ public User findUserByCredentials(String username, String password, String role)
         boolean passwordMatch = user.getPassword().equals(password);
         boolean roleMatch = user.getRole().equals(role);
         
-        System.out.println("Comparing with: " + user.getUserName() + 
-                          " - usernameMatch: " + usernameMatch + 
-                          ", passwordMatch: " + passwordMatch + 
-                          ", roleMatch: " + roleMatch);
         
         if (usernameMatch && passwordMatch && roleMatch) {
-            System.out.println("MATCH FOUND!");
             return user;
         }
     }
-    System.out.println("NO MATCH FOUND");
     return null;
 }  
     // Add getter for users
@@ -135,6 +131,7 @@ public void setCurrentUser(User user)
     this.currentUser=user;
 }
 private void loadCategories() {
+    categories.clear();
         String query = "SELECT * FROM categories";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -176,7 +173,6 @@ private void loadProducts() {
                         }
                     }
                     
-                    
                     Product product = new Product(
                         rs.getInt("product_id"),
                         rs.getString("product_name"),
@@ -198,6 +194,7 @@ private void loadProducts() {
     }
     
 private void loadSuppliers() {
+    suppliers.clear();
         String sql = "SELECT supplierId, name, contactInfo FROM Supplier";
         
         try (Connection conn = DatabaseConnection.getConnection();
@@ -245,6 +242,7 @@ public void loadCustomers() {
 }
 
 private void loadWarehouses() {
+    warehouses.clear();
     String sql = "SELECT warehouseId, warehouseName, address FROM Warehouse";
     
     try (Connection conn = DatabaseConnection.getConnection();
@@ -441,8 +439,6 @@ public void loadCustomerReturns() {
 
 
 public List<PurchaseOrderLine> loadOrderLines(int orderId) {
-    List<PurchaseOrderLine> lines = new ArrayList<>();
-
     String sql = """
         SELECT orderLineId, productId, warehouseId, quantity, unitPrice
         FROM PurchaseOrderLine
@@ -472,18 +468,18 @@ public List<PurchaseOrderLine> loadOrderLines(int orderId) {
                 batch.setPurchaseOrderLine(line); 
             }
 
-            lines.add(line);
+            allPurchaseOrderLines.add(line);
         }
 
     } catch (Exception e) {
         e.printStackTrace();
     }
 
-    return lines;
+    return allPurchaseOrderLines;
 }
 
 public List<SupplierReturnLine> loadSupplierReturnLines(int supplierReturnId) {
-    
+    allSupplierReturnLines.clear();
     String sql = """
         SELECT srl.lineId, srl.productId, srl.quantity, srl.unitPrice, srl.totalPrice, srl.batchId
         FROM SupplierReturnLine srl
@@ -526,7 +522,7 @@ public List<SupplierReturnLine> loadSupplierReturnLines(int supplierReturnId) {
 }
 
 public List<SalesOrderLine> loadSalesOrderLines(int orderId) {
-    List<SalesOrderLine> lines = new ArrayList<>();
+    allSalesOrderLines.clear();
 
     String sql = """
         SELECT lineId, productId, quantity, unitPrice, subTotal, batchId
@@ -553,18 +549,18 @@ public List<SalesOrderLine> loadSalesOrderLines(int orderId) {
             );
             line.setLineId(rs.getInt("lineId"));
 
-            lines.add(line);
+            allSalesOrderLines.add(line);
         }
 
     } catch (Exception e) {
         e.printStackTrace();
     }
 
-    return lines;
+    return allSalesOrderLines;
 }
 
 public List<CustomerReturnLine> loadCustomerReturnLines(int returnId) {
-
+    allCustomerReturnLines.clear();
     List<CustomerReturnLine> lines = new ArrayList<>();
 
     String sql = """
@@ -644,6 +640,53 @@ private void loadNotifications() {
     }
 }
 
+public void loadAllUserActivityLogs() {
+    userActivityLogs.clear();
+    String query = "SELECT logId, userId, userAction, timestamp FROM UserActivityLog ORDER BY logId DESC";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            UserActivityLog log = new UserActivityLog();
+            log.setLogId(rs.getInt("logId"));
+            log.setUserId(rs.getInt("userId"));
+            log.setUserAction(rs.getString("userAction"));
+            log.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+            userActivityLogs.add(log);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error loading user activity logs: " + e.getMessage());
+    }
+
+}
+
+public void loadAllInventoryAuditLogs() {
+    inventoryAuditLogs.clear();
+    String query = "SELECT logId, userId, productId, description, timestamp FROM InventoryAuditLogs ORDER BY logId DESC";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            InventoryAuditLog log = new InventoryAuditLog();
+            log.setLogId(rs.getInt("logId"));
+            log.setUserId(rs.getInt("userId"));
+            log.setProductId(rs.getInt("productId"));
+            log.setDescription(rs.getString("description"));
+            log.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+            inventoryAuditLogs.add(log);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error loading inventory audit logs: " + e.getMessage());
+    }
+
+}
+
 
 private BatchLot findBatchByPurchaseOrderLineId(int purchaseOrderLineId) {
     for (BatchLot batch : batchLots) {
@@ -720,7 +763,6 @@ public boolean updatePurchaseOrderLineWithBatchId(int orderLineId, int batchId) 
 }
 
 
-// Helper method to find product by ID
 public Product findProductById(int productId) {
     return products.stream()
             .filter(p -> p.getProductId() == productId)
@@ -728,7 +770,6 @@ public Product findProductById(int productId) {
             .orElse(null);
 }
 
-// Helper method to find supplier by ID
 public Supplier findSupplierById(int supplierId) {
     return suppliers.stream()
             .filter(s -> s.getSupplierId() == supplierId)
@@ -746,7 +787,6 @@ public Customer findCustomerById(int customerId) {
 }
 
 
-// Helper method to find warehouse by ID
 public Warehouse findWarehouseById(int warehouseId) {
     return warehouses.stream()
             .filter(w -> w.getWarehouseId() == warehouseId)
@@ -754,7 +794,7 @@ public Warehouse findWarehouseById(int warehouseId) {
             .orElse(null);
 }
 
-// Helper method to find purchase order by ID
+
 public PurchaseOrder findPurchaseOrderById(int orderId) {
     return purchaseOrders.stream()
             .filter(po -> po.getOrderId() == orderId)
@@ -762,7 +802,6 @@ public PurchaseOrder findPurchaseOrderById(int orderId) {
             .orElse(null);
 }
 
-// Helper method to find purchase order line by ID
 public PurchaseOrderLine findPurchaseOrderLineById(int lineId) {
     return allPurchaseOrderLines.stream()
             .filter(pol -> pol.getLineId() == lineId)
@@ -770,8 +809,9 @@ public PurchaseOrderLine findPurchaseOrderLineById(int lineId) {
             .orElse(null);
 }
 
-// Add this method to your DataController class
-private BatchLot findBatchById(int batchId) {
+
+private BatchLot findBatchById(int batchId) 
+{
     for (BatchLot batch : batchLots) {
         if (batch.getBatchId() == batchId) {
             return batch;
@@ -783,14 +823,13 @@ private BatchLot findBatchById(int batchId) {
 public List<BatchLot> getBatchesByProductId(int productId) {
     List<BatchLot> result = new ArrayList<>();
     for (BatchLot batch : batchLots) {      // <-- your internal list
-        if (batch.getProduct() != null && batch.getProduct().getProductId() == productId) {
+        if (batch.getProduct() != null && batch.getProduct().getProductId() == productId && batch.getAvailableQuantity()>0) {
             result.add(batch);
         }
     }
     return result;
 }
 
-// Add this method to DataController
 public List<SalesOrder> getSalesOrdersByCustomer(int customerId) {
     List<SalesOrder> result = new ArrayList<>();
     for (SalesOrder order : salesOrders) {
@@ -800,8 +839,8 @@ public List<SalesOrder> getSalesOrdersByCustomer(int customerId) {
     }
     return result;
 }
+
 // Getters
-    
 public List<Category> getAllCategories() {
    return new ArrayList<>(categories);
 }
@@ -854,6 +893,21 @@ public List<CustomerReturn> getCustomerReturns()
 {
     return customerReturns;
 }
+
+public List<Notification> getNotifications() {
+    return notifications;
+}
+
+public List<UserActivityLog> getUserActivityLogs() {
+   return userActivityLogs;
+}
+
+public List<InventoryAuditLog> getInventoryAuditLogs() {
+   return inventoryAuditLogs;
+}
+
+
+
 public void addPurchaseOrder(PurchaseOrder po)
 {
     purchaseOrders.add(po);
@@ -1003,6 +1057,7 @@ public void updateProductQuantity(Product prod,int qty)
         stmt.setInt(2, prod.getProductId());
 
         stmt.executeUpdate();
+        evaluateStockNotification(prod);
         } 
     catch (Exception e) {
         e.printStackTrace();
@@ -1168,7 +1223,7 @@ public void logUserActivity(int userId, String action) {
         // Create object and store in list
         UserActivityLog log = new UserActivityLog(userId, action);
         log.setLogId(logId);
-        userActivityLogs.add(log);
+        userActivityLogs.addFirst(log);
 
         System.out.println("User Activity Logged: " + action);
 
@@ -1196,7 +1251,7 @@ public void logInventoryChange(int userId, int productId, String description) {
         // Make object & add to list
         InventoryAuditLog log = new InventoryAuditLog(userId, productId, description);
         log.setLogId(logId);
-        inventoryAuditLogs.add(log);
+        inventoryAuditLogs.addFirst(log);
 
         System.out.println("Inventory Audit Logged: " + description);
 
@@ -1222,6 +1277,7 @@ public void addNotification(Notification notification) {
 
         // Add to list (if you maintain an in-memory list)
         this.notifications.add(notification);
+        HeaderController.refreshNotifications();
 
         System.out.println("NOTIFICATION ADDED: " + notification.getMessage());
 
@@ -1241,7 +1297,7 @@ public void removeNotificationForProduct(int productId) {
 
         // Remove from in-memory list
         notifications.removeIf(n -> n.getProduct().getProductId() == productId);
-
+        HeaderController.refreshNotifications();
         System.out.println("NOTIFICATION REMOVED for productId = " + productId);
 
     } catch (SQLException e) {

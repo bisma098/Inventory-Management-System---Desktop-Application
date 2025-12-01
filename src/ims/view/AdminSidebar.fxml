@@ -19,8 +19,6 @@
         <Label text="Admin Dashboard" styleClass="sidebar-title"/>
     </HBox>
 
-    <Separator/>
-
     <!-- NAVIGATION BUTTONS -->
     <VBox spacing="8" alignment="TOP_LEFT" styleClass="nav-section">
         <Button text="🏠 Inventory" fx:id="btnInventory" styleClass="nav-btn" onAction="#showInventory"/>

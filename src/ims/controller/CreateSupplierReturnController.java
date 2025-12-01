@@ -433,7 +433,7 @@ private void createSupplierReturn() {
                         "' via Supplier Return #" + newReturn.getId()
                     );
 
-                    dataController.evaluateStockNotification(line.getProduct());
+                    
                 }
             }
 

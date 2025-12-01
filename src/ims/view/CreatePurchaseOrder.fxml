@@ -9,7 +9,6 @@
             fx:controller="ims.controller.CreatePurchaseOrderController"
             fitToWidth="true"
             hbarPolicy="NEVER">
-
     <content>
 
         <VBox spacing="20" style="-fx-background-color: #f0fdfa;">
@@ -36,44 +35,67 @@
                 </HBox>
 
                 <!-- Order Line Form -->
-                <VBox spacing="10" style="-fx-border-color: #ccfbf1; -fx-border-width: 1; -fx-background-color: #f0fdfa; -fx-border-radius: 8; -fx-padding: 15;">
-                    <Label text="Add Product to Order" style="-fx-font-weight: bold; -fx-text-fill: #008080; -fx-font-size: 16px;"/>
-                    
-                    <GridPane hgap="15" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints prefWidth="200"/>
-                            <ColumnConstraints prefWidth="200"/>
-                            <ColumnConstraints prefWidth="100"/>
-                            <ColumnConstraints prefWidth="120"/>
-                            <ColumnConstraints prefWidth="150"/> <!-- Manufacture Date -->
-                            <ColumnConstraints prefWidth="150"/> <!-- Expiry Date -->
-                            <ColumnConstraints prefWidth="120"/>
-                        </columnConstraints>
-                        
-                        <!-- Headers -->
-                        <Label text="Product" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <Label text="Warehouse" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                        <Label text="Quantity" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                        <Label text="Unit Price" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
-                        <Label text="Manufacture Date" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-                        <Label text="Expiry Date" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
-                        <Label text="Action" style="-fx-font-weight: bold; -fx-text-fill: #008080;" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-                        
-                        <!-- Input Fields -->
-                        <ComboBox fx:id="productComboBox" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #008080;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="warehouseComboBox" prefWidth="200" style="-fx-background-color: white; -fx-border-color: #008080;" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        <TextField fx:id="quantityField" prefWidth="100" style="-fx-background-color: white; -fx-border-color: #008080;" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                        <TextField fx:id="unitPriceField" editable="false" prefWidth="120" style="-fx-background-color: white; -fx-border-color: #008080;" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                        <DatePicker fx:id="manufactureDatePicker" prefWidth="150"
-                            style="-fx-background-color: white; -fx-border-color: #008080;"
-                            GridPane.rowIndex="1" GridPane.columnIndex="4"/>
-                        <DatePicker fx:id="expiryDatePicker" prefWidth="150"
-                            style="-fx-background-color: white; -fx-border-color: #008080;"
-                            GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+                <VBox spacing="15" style="-fx-border-color: #ccfbf1; 
+                                        -fx-border-width: 1; 
+                                        -fx-background-color: #f0fdfa; 
+                                        -fx-border-radius: 8; 
+                                        -fx-padding: 18;">
 
-                        <Button text="Add to Order" onAction="#addOrderLine" 
-                                style="-fx-background-color: linear-gradient(to bottom, #008080, #006666); -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 12;"
-                                GridPane.rowIndex="1" GridPane.columnIndex="6"/>
+                    <Label text="Add Product to Order" 
+                        style="-fx-font-weight: bold; 
+                                -fx-text-fill: #008080; 
+                                -fx-font-size: 17px; 
+                                -fx-padding: 0 0 5 0;"/>
+
+                    <GridPane hgap="20" vgap="14">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="16"/>
+                            <ColumnConstraints percentWidth="16"/>
+                            <ColumnConstraints percentWidth="12"/>
+                            <ColumnConstraints percentWidth="12"/>
+                            <ColumnConstraints percentWidth="20"/>
+                            <ColumnConstraints percentWidth="20"/>
+                        </columnConstraints>
+
+                        <!-- Headers -->
+                        <Label text="Product" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+                        <Label text="Warehouse" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+                        <Label text="Quantity" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+                        <Label text="Unit Price" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+                        <Label text="Manufacture Date" GridPane.rowIndex="0" GridPane.columnIndex="4"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+                        <Label text="Expiry Date" GridPane.rowIndex="0" GridPane.columnIndex="5"
+                            style="-fx-font-weight: bold; -fx-text-fill: #008080;"/>
+
+                        <!-- Inputs -->
+                        <ComboBox fx:id="productComboBox" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                                style="-fx-background-color: white; -fx-border-color: #008080;" />
+                        <ComboBox fx:id="warehouseComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                style="-fx-background-color: white; -fx-border-color: #008080;" />
+                        <TextField fx:id="quantityField" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                                style="-fx-background-color: white; -fx-border-color: #008080;" />
+                        <TextField fx:id="unitPriceField" GridPane.rowIndex="1" GridPane.columnIndex="3"
+                                editable="false"
+                                style="-fx-background-color: white; -fx-border-color: #008080;" />
+                        <DatePicker fx:id="manufactureDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="4"
+                                    style="-fx-background-color: white; -fx-border-color: #008080;" />
+                        <DatePicker fx:id="expiryDatePicker" GridPane.rowIndex="1" GridPane.columnIndex="5"
+                                    style="-fx-background-color: white; -fx-border-color: #008080;" />
+
+                        <!-- Add Button (Full-width centered) -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
+                            <Button text="Add to Order"
+                                    onAction="#addOrderLine"
+                                    style="-fx-background-color: linear-gradient(to bottom, #008080, #006666);
+                                        -fx-text-fill: white;
+                                        -fx-font-weight: bold;
+                                        -fx-padding: 10 20;
+                                        -fx-background-radius: 5;"/>
+                        </HBox>
                     </GridPane>
                 </VBox>
 

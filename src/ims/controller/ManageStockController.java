@@ -202,6 +202,13 @@ public class ManageStockController {
             }
             dataController.updateBatchQuantity(batch, changeQty);
 
+            // 4. Update Java object & refresh display
+            if (changeQty > 0) {
+                product.addQuantity(qty);
+            } else {
+                product.removeQuantity(qty);
+            }
+            
             // Update product total quantity
             dataController.updateProductQuantity(product, changeQty);
 
@@ -226,16 +233,8 @@ public class ManageStockController {
                         currentUser.getUserId(),
                         product.getProductId(),
                         "Stock increased by " + qty +
-                        " for Product '" + product +
+                        " for Product '" + product.getName() +
                         "'via Adjust Stock'");
-            }
-
-            dataController.evaluateStockNotification(product);
-            // 4. Update Java object & refresh display
-            if (changeQty > 0) {
-                product.addQuantity(qty);
-            } else {
-                product.removeQuantity(qty);
             }
 
             // Refresh the displayed information

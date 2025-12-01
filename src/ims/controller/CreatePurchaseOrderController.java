@@ -360,7 +360,7 @@ private void createPurchaseOrder() {
                 "' via Purchase Order #" + newOrder.getOrderId()
             );
 
-            dataController.evaluateStockNotification(line.getProduct());
+            //dataController.evaluateStockNotification(line.getProduct());
 
         }
 

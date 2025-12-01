@@ -109,7 +109,7 @@ public class CreateSalesOrderController {
             @Override
             protected void updateItem(BatchLot p, boolean empty) {
                 super.updateItem(p, empty);
-                if (empty || p == null) setText("Select Product");
+                if (empty || p == null) setText("Select Batch");
                 else setText("Batch # " + p.getBatchId());
             }
         });
@@ -401,7 +401,7 @@ private void createSalesOrder() {
                         "' via Sales Order #" + so.getOrderId()
                     );
 
-                    dataController.evaluateStockNotification(line.getProduct());
+                    ///sdataController.evaluateStockNotification(line.getProduct());
             }
 
             showStatus("Sales Order Created! ID: " + so.getOrderId(), "success");

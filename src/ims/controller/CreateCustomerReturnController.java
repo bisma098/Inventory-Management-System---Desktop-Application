@@ -8,17 +8,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import java.time.LocalDate;
+import javafx.scene.layout.VBox;
 
 public class CreateCustomerReturnController {
 
+    // --- FORM FIELDS ---
     @FXML private ComboBox<Customer> customerComboBox;
     @FXML private ComboBox<SalesOrder> salesOrderComboBox;
     @FXML private ComboBox<SalesOrderLine> orderLineComboBox;
 
-    @FXML private TextField returnQtyField;
-    @FXML private Label unitPriceLabel;
-    @FXML private Label availableQtyLabel;
+    @FXML private TextField reasonField;
 
+
+    // Display labels
+    @FXML private Label batchLabel;
+    @FXML private Label soldQtyLabel;
+    @FXML private TextField returnQtyField;
+
+    // Return items table
     @FXML private TableView<CustomerReturnLine> returnLinesTable;
 
     @FXML private Label totalAmountLabel;
@@ -42,11 +49,10 @@ public class CreateCustomerReturnController {
     // ------------------------------------------------------------
     private void setupForm() {
 
-        // Load all customers
+        // Load customers
         customerComboBox.setItems(FXCollections.observableArrayList(dataController.getCustomers()));
 
-        // Customer display formatting
-        customerComboBox.setCellFactory(param -> new ListCell<Customer>() {
+        customerComboBox.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Customer c, boolean empty) {
                 super.updateItem(c, empty);
@@ -62,19 +68,65 @@ public class CreateCustomerReturnController {
             }
         });
 
-        // When customer selected → load their sales orders
         customerComboBox.setOnAction(e -> loadSalesOrders());
-    }
+        // -----------------------------
+        // Sales Order Combo — formatted once
+        // -----------------------------
+        salesOrderComboBox.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(SalesOrder so, boolean empty) {
+                super.updateItem(so, empty);
+                if (empty || so == null) setText(null);
+                else setText("Order #" + so.getOrderId() + " — " + so.getOrderDate());
+            }
+        });
 
+        salesOrderComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(SalesOrder so, boolean empty) {
+                super.updateItem(so, empty);
+                setText(empty || so == null ? null : "Order #" + so.getOrderId());
+            }
+        });
 
+        salesOrderComboBox.setOnAction(e -> loadOrderLines());
+        // -----------------------------
+        // Sales Order Line Combo
+        // -----------------------------
+        orderLineComboBox.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(SalesOrderLine line, boolean empty) {
+                super.updateItem(line, empty);
+                if (empty || line == null) {
+                    setText(null);
+                } else {
+                    Product p = line.getProduct();
+                    setText(p.getName() + " — Batch " + line.getBatch().getBatchId()
+                            + " — Qty: " + line.getQuantity());
+                }
+            }
+        });
+
+        orderLineComboBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(SalesOrderLine line, boolean empty) {
+                super.updateItem(line, empty);
+                if (empty || line == null) setText(null );
+                else setText(line.getProduct().getName());
+            }
+        });
+
+}
+
+        
     @FXML
     private void loadSalesOrders() {
         Customer c = customerComboBox.getValue();
         if (c == null) return;
 
-        salesOrderComboBox.setItems(FXCollections.observableArrayList(
-                dataController.getSalesOrdersByCustomer(c.getCustomerId())
-        ));
+        salesOrderComboBox.setItems(
+                FXCollections.observableArrayList(dataController.getSalesOrdersByCustomer(c.getId()))
+        );
 
         salesOrderComboBox.getSelectionModel().clearSelection();
         orderLineComboBox.getItems().clear();
@@ -90,8 +142,8 @@ public class CreateCustomerReturnController {
         if (so == null) return;
 
         orderLineComboBox.setItems(FXCollections.observableArrayList(so.getOrderLines()));
-
         orderLineComboBox.getSelectionModel().clearSelection();
+
         clearLineForm();
 
         orderLineComboBox.setOnAction(e -> showSelectedItemInfo());
@@ -102,14 +154,14 @@ public class CreateCustomerReturnController {
         SalesOrderLine line = orderLineComboBox.getValue();
         if (line == null) return;
 
-        unitPriceLabel.setText(String.format("%.2f", line.getUnitPrice()));
-        availableQtyLabel.setText(line.getQuantity() + ""); // return max = sold quantity
+        batchLabel.setText("Batch # " + line.getBatch().getBatchId());
+        soldQtyLabel.setText(String.valueOf(line.getQuantity())); // sold quantity
     }
 
 
     private void clearLineForm() {
-        unitPriceLabel.setText("0");
-        availableQtyLabel.setText("0");
+        batchLabel.setText("-");
+        soldQtyLabel.setText("0");
         returnQtyField.clear();
     }
 
@@ -117,7 +169,6 @@ public class CreateCustomerReturnController {
     // ------------------------------------------------------------
     // RETURN LINE TABLE
     // ------------------------------------------------------------
-
     private void setupReturnLinesTable() {
 
         TableColumn<CustomerReturnLine, String> productCol =
@@ -156,6 +207,7 @@ public class CreateCustomerReturnController {
                 ).asObject()
         );
 
+        // Remove button
         actionCol.setCellValueFactory(c -> new SimpleStringProperty("Remove"));
         actionCol.setCellFactory(col -> new TableCell<>() {
             final Button btn = new Button("Remove");
@@ -182,14 +234,13 @@ public class CreateCustomerReturnController {
     // ------------------------------------------------------------
     @FXML
     private void addReturnLine() {
-
         try {
             Customer c = customerComboBox.getValue();
             SalesOrder so = salesOrderComboBox.getValue();
             SalesOrderLine line = orderLineComboBox.getValue();
 
             if (c == null || so == null || line == null) {
-                showStatus("Fill all fields", "error");
+                showStatus("Fill all required fields", "error");
                 return;
             }
 
@@ -200,7 +251,16 @@ public class CreateCustomerReturnController {
             }
 
             if (qty > line.getQuantity()) {
-                showStatus("Cannot return more than purchased", "error");
+                showStatus("Cannot return more than purchased amount", "error");
+                return;
+            }
+
+            // Ensure same line is not added twice
+            boolean exists = returnLinesList.stream()
+                    .anyMatch(r -> r.getBatch().getBatchId() == line.getBatch().getBatchId());
+
+            if (exists) {
+                showStatus("This item is already added to the return", "error");
                 return;
             }
 
@@ -208,8 +268,11 @@ public class CreateCustomerReturnController {
             returnLine.setBatch(line.getBatch());
             returnLine.setUnitPrice(line.getUnitPrice());
             returnLine.setQuantity(qty);
+            returnLine.setProduct(line.getProduct());
+            returnLine.setSubTotal(qty*line.getUnitPrice());
 
             returnLinesList.add(returnLine);
+            customerComboBox.setDisable(true);
             updateTotal();
             clearLineForm();
 
@@ -225,6 +288,9 @@ public class CreateCustomerReturnController {
         returnLinesList.remove(l);
         updateTotal();
         showStatus("Removed", "info");
+        if (returnLinesList.isEmpty()) {
+            customerComboBox.setDisable(false);
+        }
     }
 
 
@@ -244,10 +310,14 @@ public class CreateCustomerReturnController {
     // SAVE CUSTOMER RETURN
     // ------------------------------------------------------------
     @FXML
-    private void saveCustomerReturn() {
+    private void createCustomerReturn() {
         try {
             if (customerComboBox.getValue() == null) {
                 showStatus("Select customer", "error");
+                return;
+            }
+            if (reasonField.getText().isEmpty()) {
+                showStatus("Enter a return reason", "error");
                 return;
             }
             if (returnLinesList.isEmpty()) {
@@ -258,26 +328,44 @@ public class CreateCustomerReturnController {
             CustomerReturn cr = new CustomerReturn();
             cr.setCustomer(customerComboBox.getValue());
             cr.setReturnDate(LocalDate.now());
-            cr.setReason("Customer Return");
-            cr.setReturnLines(new java.util.ArrayList<>(returnLinesList));
+            cr.setReason(reasonField.getText());
+
+            for (CustomerReturnLine line : returnLinesList) {
+                cr.addReturnLine(line);
+            }
 
             dataController.addCustomerReturn(cr);
-
             boolean saved = dataController.saveCustomerReturn(cr);
+
             if (!saved) {
                 showStatus("Failed to save return", "error");
                 return;
             }
 
+            User currentUser = dataController.getCurrentUser();
+            dataController.logUserActivity(
+            currentUser.getUserId(),
+            "Created Customer Return #" + cr.getReturnId() +" for Customer "+ cr.getCustomer().getName()
+            );
+
             // Restore stock
             for (CustomerReturnLine line : cr.getReturnLines()) {
                 BatchLot batch = line.getBatch();
                 batch.addQuantity(line.getQuantity());
-                dataController.updateBatchQuantity(batch, batch.getAvailableQuantity());
+                dataController.updateBatchQuantity(batch,line.getQuantity());
 
                 Product p = batch.getProduct();
                 p.addQuantity(line.getQuantity());
-                dataController.updateProductQuantity(p, +line.getQuantity());
+                dataController.updateProductQuantity(p, line.getQuantity());
+
+                // Log inventory change for each product in the order
+                        dataController.logInventoryChange(
+                        currentUser.getUserId(),
+                        line.getProduct().getProductId(),
+                        "Stock increased by " + line.getQuantity() +
+                        " for Product '" + line.getProduct().getName() +
+                        "' via Customer Return #" + cr.getReturnId()
+                    );
             }
 
             showStatus("Return Created! ID: " + cr.getReturnId(), "success");
@@ -297,7 +385,9 @@ public class CreateCustomerReturnController {
         salesOrderComboBox.getItems().clear();
         orderLineComboBox.getItems().clear();
 
-        returnQtyField.clear();
+        reasonField.clear();
+
+        clearLineForm();
         returnLinesList.clear();
         updateTotal();
     }

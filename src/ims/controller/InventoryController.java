@@ -8,10 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.geometry.Insets;
 import javafx.beans.property.SimpleStringProperty;
-import java.time.LocalDate;
 
 public class InventoryController {
     
@@ -126,8 +123,7 @@ public class InventoryController {
         updateStats();
     }
     
-    @FXML
-    private void handleSearch() {
-        // Implement search functionality if needed
-    }
+    
+
+
 }
