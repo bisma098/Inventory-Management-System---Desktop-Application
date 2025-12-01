@@ -31,6 +31,9 @@
         <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
         <Button text="👥 Users" fx:id="btnUsers" styleClass="nav-btn" onAction="#showUsers"/>
         <Button text="💾 Database" fx:id="btnDatabase" styleClass="nav-btn" onAction="#showDatabase"/>
+        <Button text="Add New User" fx:id="btnUser" styleClass="nav-btn" onAction="#openAddUser" />
+        <Button text="Warehouse Tracking" fx:id="btnUser" styleClass="nav-btn" onAction="#WarehouseTracking"/>
+
         
     </VBox>
 

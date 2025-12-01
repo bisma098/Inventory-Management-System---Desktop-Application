@@ -3,10 +3,13 @@ package ims.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -50,12 +53,21 @@ public class AdminSidebarController {
         System.out.println("Navigating to Categories...");
         // TODO: Load Categories management view
     }
+    
+    @FXML
+    private void WarehouseTracking(ActionEvent event) {
+        loadContent("/ims/view/WarehouseTracking.fxml");
+        
+    }
 
     @FXML
     private void showProductTracking(ActionEvent event) {
         System.out.println("Navigating to Product Tracking...");
         // TODO: Load Product Tracking view
     }
+    public void openAddUser(ActionEvent event) {
+        loadContent("/ims/view/AddUser.fxml");
+}
 
     @FXML
     private void showUsers(ActionEvent event) {
@@ -98,4 +110,5 @@ public class AdminSidebarController {
             showInventory();
         });
     }
+
 }

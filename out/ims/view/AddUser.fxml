@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ims.controller.AddUserController"
+      spacing="20"
+      style="-fx-background-color: #f8fafc;">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- PAGE TITLE -->
+    <Label text="Add New User" 
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+
+    <!-- MAIN FORM CARD -->
+    <VBox spacing="20" 
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <padding>
+            <Insets top="25" right="25" bottom="25" left="25"/>
+        </padding>
+
+        <!-- Two Column Grid for Form Fields -->
+        <GridPane hgap="20" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <!-- Row 1: Username and Password -->
+            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Username" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtUserName" promptText="Enter username" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Password" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <PasswordField fx:id="txtPassword" promptText="Enter password" 
+                              style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <!-- Row 2: Role and Contact -->
+            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label text="Role" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <ComboBox fx:id="cbRole" promptText="Select role" 
+                         style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px;">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Admin"/>
+                            <String fx:value="Manager"/>
+                            <String fx:value="Staff"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </VBox>
+
+            <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="Contact Number" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtContact" promptText="Enter contact number" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <!-- Row 3: Email -->
+            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                <Label text="Email" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtEmail" promptText="Enter email" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <!-- Row 4: Area and City -->
+            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label text="Area" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtArea" promptText="Enter area" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label text="City" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtCity" promptText="Enter city" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+
+            <!-- Row 5: Address (Full Width) -->
+            <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="2">
+                <Label text="Address" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <TextField fx:id="txtAddress" promptText="Enter address" 
+                          style="-fx-pref-height: 35px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-padding: 0 10px;"/>
+            </VBox>
+        </GridPane>
+
+        <!-- Create Button -->
+        <HBox spacing="10" style="-fx-alignment: center-left;">
+            <Button text="Create User"
+                    onAction="#createUser"
+                    style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5px; -fx-padding: 8px 16px; -fx-cursor: hand; -fx-pref-width: 150;"
+                    maxWidth="150"/>
+        </HBox>
+    </VBox>
+
+</VBox>

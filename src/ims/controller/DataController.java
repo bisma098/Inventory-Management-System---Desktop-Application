@@ -108,6 +108,31 @@ public class DataController {
         return new ArrayList<>(users);
     }
     
+    public void addWarehouse(String warehouseName, String address) {
+    String query = "INSERT INTO Warehouse (warehouseName, address) VALUES (?, ?)";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+        stmt.setString(1, warehouseName);
+        stmt.setString(2, address);
+        stmt.executeUpdate();
+
+        // Get generated warehouseId
+        ResultSet rs = stmt.getGeneratedKeys();
+        int id = 0;
+        if (rs.next()) {
+            id = rs.getInt(1);
+        }
+
+        // Add to in-memory list
+        Warehouse warehouse = new Warehouse(id, warehouseName, address);
+        warehouses.add(warehouse);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     private void loadCategories() {
         String query = "SELECT * FROM categories";
@@ -556,7 +581,7 @@ public List<UserActivityLog> getUserActivityLogs() {
 }
 
 public List<InventoryAuditLog> getInventoryAuditLogs() {
-   return new ArrayList<>(inventoryAuditLogs);
+   return loadAllInventoryAuditLogs();
 }
 // Getter for suppliers
 public List<Supplier> getSuppliers() {

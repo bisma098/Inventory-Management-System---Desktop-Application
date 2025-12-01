@@ -1,50 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ims.controller.UserActivityLogController"
-            fitToWidth="true"
-            hbarPolicy="NEVER"
-            prefHeight="600" prefWidth="900"
-            style="-fx-background: white;">
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.UserActivityLogController"
+      spacing="20"
+      style="-fx-padding: 20;">
 
-    <content>
-        <VBox spacing="20">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+    <!-- HEADER -->
+    <Label text="User Activity Log"
+           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
 
-            <!-- Header Section -->
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <Label text="User Activity Log" 
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #006666;"/>
-            </HBox>
+    <!-- ACTIVITY LOG TABLE -->
+    <TableView fx:id="logTable" prefHeight="500" style="-fx-background-color: white;">
+        <columns>
+            <TableColumn fx:id="colId" text="Log ID" prefWidth="80"/>
+            <TableColumn fx:id="colUserId" text="User ID" prefWidth="80"/>
+            <TableColumn fx:id="colAction" text="Action" prefWidth="300"/>
+            <TableColumn fx:id="colTime" text="Timestamp" prefWidth="150"/>
+        </columns>
+    </TableView>
 
-            <!-- Activity Log Table -->
-            <VBox spacing="10" style="-fx-background-color: #f8f8f8; -fx-padding: 15; -fx-background-radius: 8;">
-                <Label text="Activity Records" 
-                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #008080; -fx-padding: 0 0 10 0;"/>
-                
-                <TableView fx:id="logTable" prefHeight="500" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
-                    <columns>
-                        <TableColumn fx:id="colId" text="Log ID" prefWidth="100" 
-                                   style="-fx-background-color: #008080; -fx-text-fill: white;"/>
-                        <TableColumn fx:id="colUserId" text="User ID" prefWidth="100"
-                                   style="-fx-background-color: #008080; -fx-text-fill: white;"/>
-                        <TableColumn fx:id="colAction" text="Action" prefWidth="500"
-                                   style="-fx-background-color: #008080; -fx-text-fill: white;"/>
-                        <TableColumn fx:id="colTime" text="Timestamp" prefWidth="200"
-                                   style="-fx-background-color: #008080; -fx-text-fill: white;"/>
-                    </columns>
-                </TableView>
-            </VBox>
-
-            
-        </VBox>
-    </content>
-
-</ScrollPane>
+</VBox>
