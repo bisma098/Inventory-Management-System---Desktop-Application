@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ims.controller.InventoryAuditLogController"
+      spacing="20"
+      style="-fx-padding: 20;">
+
+    <!-- HEADER -->
+    <Label text="Inventory AuditLogs"
+           style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+
+    <!-- AUDIT LOGS TABLE -->
+    <TableView fx:id="auditTable" prefHeight="500" style="-fx-background-color: white;">
+        <columns>
+            <TableColumn fx:id="colId" text="Log ID" prefWidth="80"/>
+            <TableColumn fx:id="colUserId" text="User ID" prefWidth="80"/>
+            <TableColumn fx:id="colProductId" text="Product ID" prefWidth="100"/>
+            <TableColumn fx:id="colDescription" text="Description" prefWidth="300"/>
+            <TableColumn fx:id="colTimestamp" text="Timestamp" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+</VBox>

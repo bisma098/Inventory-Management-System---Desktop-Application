@@ -2,29 +2,77 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ims.controller.HeaderController"
-            style="-fx-padding: 0;">
+            fx:controller="ims.controller.HeaderController">
 
     <top>
         <HBox spacing="10"
               alignment="CENTER_LEFT"
-              style="-fx-background-color: #2c97a3ff; -fx-padding: 20;"
-              prefHeight="100" minHeight="100" maxHeight="100"
-              maxWidth="1.7976931348623157E308">
+              style="-fx-background-color: linear-gradient(to right, #005353ff, #004343ff); -fx-padding: 20 25;"
+              prefHeight="90">
 
-            <Label text="JoyBox IMS"
-                   style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <!-- Logo + Title -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <VBox spacing="2">
+                    <Label text="JoyBox IMS"
+                           style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                    <Label text="Inventory Management System"
+                           style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 11px;"/>
+                </VBox>
+            </HBox>
 
             <Pane HBox.hgrow="ALWAYS"/>
 
-            <Button text="Profile" onAction="#openProfile"
-                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
+            <!-- Notification Bell -->
+            <StackPane>
+                <Button fx:id="notificationBtn" onAction="#toggleNotifications"
+                        style="-fx-background-color: transparent; -fx-padding: 4; -fx-cursor: hand;">
+                    <graphic>
+                        <SVGPath content="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zm0 16a2 2 0 01-2-2h4a2 2 0 01-2 2z"
+                                 style="-fx-fill: white; -fx-scale-x: 1.2; -fx-scale-y: 1.2;"/>
+                    </graphic>
+                </Button>
 
+                <Label fx:id="notificationCount"
+                       text="0"
+                       visible="false"
+                       style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 10px;
+                              -fx-padding: 2 6; -fx-background-radius: 10; -fx-cursor: hand;">
+                    <StackPane.margin>
+                        <Insets top="-10" right="-10"/>
+                    </StackPane.margin>
+                </Label>
+            </StackPane>
+
+            <!-- Thin Separator -->
+            <Separator orientation="VERTICAL" prefWidth="1" prefHeight="20" 
+                       style="-fx-background-color: rgba(255,255,255,0.5);"/>
+
+            <!-- Profile Icon -->
+            <Button fx:id="profileBtn" onAction="#openProfile"
+                    style="-fx-background-color: transparent; -fx-padding: 4; -fx-cursor: hand;">
+                <graphic>
+                    <StackPane>
+                        <Circle radius="16" fill="rgba(255,255,255,0.2)" stroke="white" strokeWidth="2"/>
+                        <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                                 style="-fx-fill: white; -fx-scale-x: 0.9; -fx-scale-y: 0.9;"/>
+                    </StackPane>
+                </graphic>
+            </Button>
+
+            <!-- Welcome Message -->
+            <Label fx:id="welcomeLabel"
+                   style="-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 0 15 0 5;"/>
+
+            <!-- Logout Button -->
             <Button text="Logout" onAction="#logout"
-                    style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;"/>
+                    style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-weight: 600;
+                           -fx-background-radius: 5; -fx-padding: 8 16; -fx-margin: 0 0 0 10; -fx-cursor: hand;"/>
+
         </HBox>
     </top>
 

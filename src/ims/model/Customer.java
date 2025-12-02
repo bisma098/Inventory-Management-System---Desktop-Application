@@ -5,6 +5,8 @@ public class Customer {
     private String name;
     private String contactInfo;
 
+
+    public Customer(){  }
     public Customer(int id, String name, String contactInfo) {
         this.id = id;
         this.name = name;

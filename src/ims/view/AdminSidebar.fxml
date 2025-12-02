@@ -19,8 +19,6 @@
         <Label text="Admin Dashboard" styleClass="sidebar-title"/>
     </HBox>
 
-    <Separator/>
-
     <!-- NAVIGATION BUTTONS -->
     <VBox spacing="8" alignment="TOP_LEFT" styleClass="nav-section">
         <Button text="🏠 Inventory" fx:id="btnInventory" styleClass="nav-btn" onAction="#showInventory"/>
@@ -30,6 +28,8 @@
         <Button text="🗂 Categories" fx:id="btnCategories" styleClass="nav-btn" onAction="#showCategories"/>
         <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
         <Button text="👥 Users" fx:id="btnUsers" styleClass="nav-btn" onAction="#showUsers"/>
+        <Button text="🏠 Warehouse" fx:id="btnWarehouse" styleClass="nav-btn" onAction="#showWarehouse"/>
+        
     </VBox>
 
 </VBox>

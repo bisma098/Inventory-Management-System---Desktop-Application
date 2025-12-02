@@ -41,17 +41,12 @@ public class ManagerSidebarController {
 
     @FXML
     private void showAdjustStock() {
-        System.out.println("Adjust Stock clicked");
+        loadContent("/ims/view/ManageStock.fxml"); 
     }
 
     @FXML
     private void showProductTracking() {
         System.out.println("Product Tracking clicked");
-    }
-
-    @FXML
-    private void handleLogout() {
-        System.out.println("Logout clicked");
     }
 
     private void loadContent(String fxmlPath) {

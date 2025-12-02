@@ -5,11 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -291,7 +288,7 @@ public class CreatePurchaseOrderController {
         totalAmountLabel.setText(String.format("Total: $%.2f", total));
     }
 
-    @FXML
+@FXML
 private void createPurchaseOrder() {
     try {
         // Validate
@@ -323,6 +320,13 @@ private void createPurchaseOrder() {
             return;
         }
 
+        // Log user activity
+        User currentUser = dataController.getCurrentUser();
+        dataController.logUserActivity(
+            currentUser.getUserId(),
+            "Created Purchase Order #" + newOrder.getOrderId() +" with Supplier "+ newOrder.getSupplier().getName()
+        );
+
         for (PurchaseOrderLine line : newOrder.getOrderLines()) {  
             BatchLot batch = new BatchLot();
             batch.setProduct(line.getProduct());
@@ -347,6 +351,17 @@ private void createPurchaseOrder() {
             //update product quantity:
             line.getProduct().addQuantity(line.getQuantity());
             dataController.updateProductQuantity(line.getProduct(),line.getQuantity());
+            // Log inventory change for each product in the order
+            dataController.logInventoryChange(
+                currentUser.getUserId(),
+                line.getProduct().getProductId(),
+                "Stock increased by " + line.getQuantity() +
+                " for Product '" + line.getProduct().getName() +
+                "' via Purchase Order #" + newOrder.getOrderId()
+            );
+
+            //dataController.evaluateStockNotification(line.getProduct());
+
         }
 
         showStatus("Purchase order created successfully! Order ID: " + newOrder.getOrderId(), "success");

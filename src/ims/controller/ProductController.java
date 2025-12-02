@@ -1,6 +1,5 @@
 package ims.controller;
 
-import ims.controller.DataController;
 import ims.model.Product;
 import ims.model.Category;
 import ims.database.DatabaseConnection;
@@ -9,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.sql.*;
-import java.time.LocalDate;
 
 public class ProductController {
 
@@ -20,20 +18,17 @@ public class ProductController {
     @FXML private TableColumn<Product, String> colName;
     @FXML private TableColumn<Product, String> colSKU;
     @FXML private TableColumn<Product, Double> colPrice;
-    @FXML private TableColumn<Product, Integer> colQty;
-    @FXML private TableColumn<Product, LocalDate> colExpiry;
-    @FXML private TableColumn<Product, Category> colCategory;
+    @FXML private TableColumn<Product, String> colCategory;
 
     @FXML private TextField addNameField;
     @FXML private TextField addSKUField;
     @FXML private TextField addPriceField;
-    @FXML private TextField addQtyField;
-    @FXML private DatePicker addExpiryField;
     @FXML private TextField addCategoryField;
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
     private ObservableList<Product> allProducts = FXCollections.observableArrayList();
     
+    // Reference to DataController
     private DataController dataController;
 
     @FXML
@@ -46,9 +41,13 @@ public class ProductController {
         colName.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getName()));
         colSKU.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getSKU()));
         colPrice.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getPrice()));
-        colQty.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getQuantity()));
-        colExpiry.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getExpiryDate()));
-        colCategory.setCellValueFactory(c -> new javafx.beans.property.SimpleObjectProperty<>(c.getValue().getCategory()));
+        
+        // Extract category name instead of Category object
+        colCategory.setCellValueFactory(c -> {
+            Category category = c.getValue().getCategory();
+            String categoryName = (category != null) ? category.getName() : "No Category";
+            return new javafx.beans.property.SimpleStringProperty(categoryName);
+        });
 
         // Load products from DataController
         loadProductsFromDataController();
@@ -56,33 +55,33 @@ public class ProductController {
     }
 
     /**
-     * Load products from DataController (already loaded from database)
+     * Load products from DataController (already cached in memory)
      */
     private void loadProductsFromDataController() {
         products.clear();
         allProducts.clear();
         
-        // Get products from DataController singleton
-        products.addAll(dataController.getAllProducts());
-        allProducts.addAll(dataController.getAllProducts());
+        // Get products from DataController
+        products.addAll(dataController.getProducts());
+        allProducts.addAll(dataController.getProducts());
         
         System.out.println("✅ Loaded " + products.size() + " products from DataController");
     }
 
     /**
-     * Refresh products from database through DataController
+     * Refresh products from DataController
      */
     private void refreshProducts() {
-        // Reload all data in DataController
+        // Reload all data in DataController to sync with database
         dataController.loadAllData();
         
-        // Refresh local lists
+        // Reload products into table
         loadProductsFromDataController();
         productTable.refresh();
     }
 
     /**
-     * Add new product to database with auto-incremented product_id
+     * Add new product to database
      */
     @FXML
     public void addProduct() {
@@ -93,73 +92,54 @@ public class ProductController {
 
         Connection conn = null;
         PreparedStatement stmt = null;
-        ResultSet rs = null;
 
         try {
             String name = addNameField.getText().trim();
             String sku = addSKUField.getText().trim();
             double price = Double.parseDouble(addPriceField.getText().trim());
-            int quantity = Integer.parseInt(addQtyField.getText().trim());
-            LocalDate expiryDate = addExpiryField.getValue();
             String categoryName = addCategoryField.getText().trim();
 
             conn = DatabaseConnection.getConnection();
 
-            // ✅ Step 1: Get the next product_id
-            int nextProductId = getNextProductId(conn);
-
-            // Step 2: Get or create category
+            // Step 1: Get or create category
             int categoryId = getOrCreateCategory(conn, categoryName);
 
-            // ✅ Step 3: Insert product WITH explicit product_id
-            String sql = "INSERT INTO products (product_id, product_name, sku, price, quantity, expiry_date, category_id) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // Step 2: Insert product (quantity defaults to 0)
+            String sql = "INSERT INTO products (product_name, sku, price, category_id) " +
+                        "VALUES (?, ?, ?, ?)";
 
             stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, nextProductId);  // ✅ Set explicit product_id
-            stmt.setString(2, name);
-            stmt.setString(3, sku);
-            stmt.setDouble(4, price);
-            stmt.setInt(5, quantity);
-            stmt.setDate(6, (expiryDate != null) ? Date.valueOf(expiryDate) : null);
-            stmt.setInt(7, categoryId);
+            stmt.setString(1, name);
+            stmt.setString(2, sku);
+            stmt.setDouble(3, price);
+            stmt.setInt(4, categoryId);
 
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
+                // Log user activity
+                if (dataController.getCurrentUser() != null) {
+                    dataController.logUserActivity(
+                        dataController.getCurrentUser().getUserId(),
+                        "Added new product: " + name
+                    );
+                }
+                
                 showAlert(Alert.AlertType.INFORMATION, "Success", 
-                         "Product added successfully with ID: " + nextProductId);
+                         "Product added successfully!");
                 clearAddFields();
-                refreshProducts(); // Refresh from DataController
+                
+                // Refresh DataController and table
+                refreshProducts();
             }
 
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter valid numbers for price and quantity!");
+            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a valid number for price!");
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to add product: " + e.getMessage());
         } finally {
-            closeResources(rs, stmt, conn);
-        }
-    }
-
-    /**
-     * Get the next available product_id by finding the max and incrementing
-     */
-    private int getNextProductId(Connection conn) throws SQLException {
-        String sql = "SELECT ISNULL(MAX(product_id), 0) + 1 AS next_id FROM products";
-        
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
-            if (rs.next()) {
-                int nextId = rs.getInt("next_id");
-                System.out.println("✅ Next product_id will be: " + nextId);
-                return nextId;
-            }
-            
-            // If table is empty, start with 1
-            return 1;
+            closeResources(null, stmt, conn);
         }
     }
 
@@ -185,17 +165,27 @@ public class ProductController {
             rs.close();
             stmt.close();
 
-            String insertSql = "INSERT INTO categories (category_name) VALUES (?)";
-            stmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, categoryName);
+            // Get next category_id
+            String maxIdSql = "SELECT ISNULL(MAX(category_id), 0) + 1 AS next_id FROM categories";
+            stmt = conn.prepareStatement(maxIdSql);
+            rs = stmt.executeQuery();
+            
+            int nextId = 1;
+            if (rs.next()) {
+                nextId = rs.getInt("next_id");
+            }
+            
+            rs.close();
+            stmt.close();
+
+            // Insert new category with explicit ID
+            String insertSql = "INSERT INTO categories (category_id, category_name) VALUES (?, ?)";
+            stmt = conn.prepareStatement(insertSql);
+            stmt.setInt(1, nextId);
+            stmt.setString(2, categoryName);
             stmt.executeUpdate();
 
-            rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                return rs.getInt(1);
-            } else {
-                throw new SQLException("Failed to create category");
-            }
+            return nextId;
 
         } finally {
             if (rs != null) rs.close();
@@ -227,8 +217,6 @@ public class ProductController {
             String name = addNameField.getText().trim();
             String sku = addSKUField.getText().trim();
             double price = Double.parseDouble(addPriceField.getText().trim());
-            int quantity = Integer.parseInt(addQtyField.getText().trim());
-            LocalDate expiryDate = addExpiryField.getValue();
             String categoryName = addCategoryField.getText().trim();
 
             conn = DatabaseConnection.getConnection();
@@ -236,29 +224,37 @@ public class ProductController {
             // Get or create category
             int categoryId = getOrCreateCategory(conn, categoryName);
 
-            // Update product
-            String sql = "UPDATE products SET product_name = ?, sku = ?, price = ?, " +
-                        "quantity = ?, expiry_date = ?, category_id = ? WHERE product_id = ?";
+            // Update product (quantity is NOT updated here)
+            String sql = "UPDATE products SET product_name = ?, sku = ?, price = ?, category_id = ? " +
+                        "WHERE product_id = ?";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
             stmt.setString(2, sku);
             stmt.setDouble(3, price);
-            stmt.setInt(4, quantity);
-            stmt.setDate(5, (expiryDate != null) ? Date.valueOf(expiryDate) : null);
-            stmt.setInt(6, categoryId);
-            stmt.setInt(7, selected.getProductId());
+            stmt.setInt(4, categoryId);
+            stmt.setInt(5, selected.getProductId());
 
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
+                // Log user activity
+                if (dataController.getCurrentUser() != null) {
+                    dataController.logUserActivity(
+                        dataController.getCurrentUser().getUserId(),
+                        "Updated product: " + name + " (ID: " + selected.getProductId() + ")"
+                    );
+                }
+                
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Product updated successfully!");
                 clearAddFields();
-                refreshProducts(); // Refresh from DataController
+                
+                // Refresh DataController and table
+                refreshProducts();
             }
 
         } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter valid numbers for price and quantity!");
+            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a valid number for price!");
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update product: " + e.getMessage());
@@ -302,8 +298,18 @@ public class ProductController {
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
+                // Log user activity
+                if (dataController.getCurrentUser() != null) {
+                    dataController.logUserActivity(
+                        dataController.getCurrentUser().getUserId(),
+                        "Deleted product: " + selected.getName() + " (ID: " + selected.getProductId() + ")"
+                    );
+                }
+                
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Product deleted successfully!");
-                refreshProducts(); // Refresh from DataController
+                
+                // Refresh DataController and table
+                refreshProducts();
             }
 
         } catch (SQLException e) {
@@ -353,8 +359,6 @@ public class ProductController {
             addNameField.setText(selected.getName());
             addSKUField.setText(selected.getSKU());
             addPriceField.setText(String.valueOf(selected.getPrice()));
-            addQtyField.setText(String.valueOf(selected.getQuantity()));
-            addExpiryField.setValue(selected.getExpiryDate());
             if (selected.getCategory() != null) {
                 addCategoryField.setText(selected.getCategory().getName());
             }
@@ -380,11 +384,6 @@ public class ProductController {
             return false;
         }
 
-        if (addQtyField.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Quantity is required!");
-            return false;
-        }
-
         if (addCategoryField.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Validation Error", "Category is required!");
             return false;
@@ -401,17 +400,6 @@ public class ProductController {
             return false;
         }
 
-        try {
-            int qty = Integer.parseInt(addQtyField.getText().trim());
-            if (qty < 0) {
-                showAlert(Alert.AlertType.WARNING, "Validation Error", "Quantity must be positive!");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.WARNING, "Validation Error", "Quantity must be a valid integer!");
-            return false;
-        }
-
         return true;
     }
 
@@ -423,8 +411,6 @@ public class ProductController {
         addNameField.clear();
         addSKUField.clear();
         addPriceField.clear();
-        addQtyField.clear();
-        addExpiryField.setValue(null);
         addCategoryField.clear();
     }
 

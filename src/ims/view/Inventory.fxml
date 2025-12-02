@@ -14,7 +14,7 @@
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
-
+    
     <Label text="Inventory Overview" styleClass="section-title"/>
 
     <!-- Quick Stats -->

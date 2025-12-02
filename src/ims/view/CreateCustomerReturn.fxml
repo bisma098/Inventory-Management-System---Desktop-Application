@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.CreateCustomerReturnController"
+            fitToWidth="true"
+            hbarPolicy="NEVER">
+
+    <content>
+
+        <VBox spacing="20" style="-fx-background-color:#f0fdfa;">
+
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Header Section -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button text="← Back to Returns" onAction="#goBack"
+                        style="-fx-background-color:#666; -fx-text-fill:white;
+                               -fx-font-weight:bold; -fx-padding:8 16;"/>
+
+                <Label text="Create Customer Return"
+                       style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#008080;"/>
+            </HBox>
+
+            <!-- Main Form Container -->
+            <VBox spacing="20" style="-fx-background-color:white;
+                                      -fx-padding:20;
+                                      -fx-border-color:#20B2AA;
+                                      -fx-border-width:2;
+                                      -fx-border-radius:10;
+                                      -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.1),5,0.3,2,2);">
+
+                <!-- CUSTOMER SELECTION -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Customer:*"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:150;"/>
+
+                    <ComboBox fx:id="customerComboBox" prefWidth="350"
+                              style="-fx-background-color:white; -fx-border-color:#008080;"/>
+
+                    <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+                </HBox>
+
+                <!-- SALES ORDER SELECTION -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Sales Order:*"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:150;"/>
+
+                    <ComboBox fx:id="salesOrderComboBox" prefWidth="350"
+                              style="-fx-background-color:white; -fx-border-color:#008080;"
+                              promptText="Select Sales Order"/>
+
+                    <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+                </HBox>
+
+                <!-- SALES ORDER LINE SELECTION -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Purchased Item:*"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:150;"/>
+
+                    <ComboBox fx:id="orderLineComboBox" prefWidth="350"
+                              style="-fx-background-color:white; -fx-border-color:#008080;"
+                              promptText="Select Item From Sales Order"/>
+
+                    <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+                </HBox>
+
+                <!-- REASON -->
+              <HBox spacing="15" alignment="CENTER_LEFT">
+              <Label text="Return Reason:*"
+                     style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-min-width:150;"/>
+
+              <TextField fx:id="reasonField" prefWidth="350"
+                            promptText="Enter return reason"
+                            style="-fx-background-color:white; -fx-border-color:#008080;"/>
+
+              <Label text="Required" style="-fx-text-fill:#666; -fx-font-style:italic;"/>
+              </HBox>
+
+
+                <!-- ADD RETURN ITEM -->
+                <VBox spacing="10"
+                      style="-fx-background-color:#f0fdfa; -fx-padding:15;
+                             -fx-border-color:#ccfbf1; -fx-border-width:1; -fx-border-radius:8;">
+
+                    <Label text="Add Returned Item"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-font-size:16px;"/>
+
+                    <GridPane hgap="15" vgap="10">
+
+                        <columnConstraints>
+                            <ColumnConstraints prefWidth="220"/>
+                            <ColumnConstraints prefWidth="120"/>
+                            <ColumnConstraints prefWidth="100"/>
+                            <ColumnConstraints prefWidth="120"/>
+                        </columnConstraints>
+
+                        <Label text="Batch" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
+
+                        <Label text="Sold Qty" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
+
+                        <Label text="Return Qty" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                               style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
+
+                        <Label text="Action" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                               style="-fx-font-weight:bold; -fx-text-fill:#008080;"/>
+
+                        <Label fx:id="batchLabel" text="-" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               style="-fx-text-fill:#006666; -fx-font-weight:bold;"/>
+
+                        <Label fx:id="soldQtyLabel" text="0" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                               style="-fx-text-fill:#006666; -fx-font-weight:bold;"/>
+
+                        <TextField fx:id="returnQtyField" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                                   style="-fx-background-color:white; -fx-border-color:#008080;"/>
+
+                        <Button text="Add" onAction="#addReturnLine"
+                                GridPane.rowIndex="1" GridPane.columnIndex="3"
+                                style="-fx-background-color:linear-gradient(to bottom,#008080,#006666);
+                                       -fx-text-fill:white; -fx-font-weight:bold; -fx-padding:6 12;"/>
+                    </GridPane>
+                </VBox>
+
+                <Label fx:id="statusLabel"
+                       visible="false"
+                       style="-fx-font-weight:bold;"/>
+
+                <!-- RETURN ITEMS TABLE -->
+                <VBox spacing="10">
+                    <Label text="Return Items"
+                           style="-fx-font-weight:bold; -fx-text-fill:#008080; -fx-font-size:16px;"/>
+
+                    <TableView fx:id="returnLinesTable" prefHeight="160">
+                        <columns>
+                            <TableColumn text="Product" prefWidth="200"/>
+                            <TableColumn text="Batch No" prefWidth="120"/>
+                            <TableColumn text="Return Qty" prefWidth="100"/>
+                            <TableColumn text="Unit Price" prefWidth="120"/>
+                            <TableColumn text="Line Total" prefWidth="120"/>
+                            <TableColumn text="Action" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Label fx:id="totalAmountLabel" text="Total: $0.00"
+                               style="-fx-font-weight:bold; -fx-font-size:16px;
+                                      -fx-text-fill:#008080; -fx-background-color:#ccfbf1;
+                                      -fx-padding:10; -fx-background-radius:5;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- BUTTONS -->
+                <HBox spacing="20" alignment="CENTER">
+                    <Button text="Create Customer Return" onAction="#createCustomerReturn"
+                            style="-fx-background-color:linear-gradient(to bottom,#008080,#006666);
+                                   -fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14;
+                                   -fx-padding:10 20; -fx-pref-width:220;"/>
+
+                    <Button text="Cancel" onAction="#goBack"
+                            style="-fx-background-color:#E0F2F1; -fx-text-fill:#008080;
+                                   -fx-font-weight:bold; -fx-border-color:#008080; -fx-border-width:2;
+                                   -fx-padding:10 20; -fx-pref-width:120;"/>
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+
+    </content>
+
+</ScrollPane>

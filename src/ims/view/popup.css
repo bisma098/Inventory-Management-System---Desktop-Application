@@ -1,0 +1,24 @@
+.dialog-pane {
+    -fx-background-color: #008080;
+    -fx-border-color: #c4c4c4;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.dialog-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.dialog-btn {
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333;
+}
+
+.dialog-btn:hover {
+    -fx-background-color: #e0e0e0;
+}

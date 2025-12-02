@@ -21,14 +21,12 @@ public class StaffSidebarController {
 
     @FXML
     private void showSalesOrder(ActionEvent event) {
-        System.out.println("Navigating to Sales Order...");
-        // TODO: Load Sales Order view
+        loadContent("/ims/view/SalesOrder.fxml");
     }
 
     @FXML
     private void showCustomerReturns(ActionEvent event) {
-        System.out.println("Navigating to Customer Returns...");
-        // TODO: Load Customer Returns view
+        loadContent("/ims/view/CustomerReturn.fxml");
     }
 
     private void loadContent(String fxmlPath) {
