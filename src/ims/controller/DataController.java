@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import ims.database.DatabaseConnection;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.sql.Date;  // For SQL Date operations
 import java.time.LocalDate;
 
@@ -230,24 +231,43 @@ public class DataController {
     // Load warehouses directly in DataController
 private void loadWarehouses() {
     String sql = "SELECT warehouseId, warehouseName, address FROM Warehouse";
-    
+
     try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        
+         PreparedStatement pst = conn.prepareStatement(sql);
+         ResultSet rs = pst.executeQuery()) {
+
         while (rs.next()) {
-            Warehouse warehouse = new Warehouse(
+            warehouses.add(new Warehouse(
                 rs.getInt("warehouseId"),
                 rs.getString("warehouseName"),
                 rs.getString("address")
-            );
-            warehouses.add(warehouse);
+            ));
         }
-        System.out.println("Loaded " + warehouses.size() + " warehouses");
-        
-    } catch (SQLException e) {
-        System.err.println("Error loading warehouses: " + e.getMessage());
+
+        System.out.println("Loaded from DB: " + warehouses.size());
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+}
+
+public int getBatchCountByWarehouse(int warehouseId) {
+    String sql = "SELECT COUNT(*) FROM BatchLot WHERE warehouseId = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setInt(1, warehouseId);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return 0;
 }
 
 public void loadBatchLots() {
@@ -916,4 +936,10 @@ public void logInventoryChange(int userId, int productId, String description) {
         System.err.println("Error logging inventory change: " + e.getMessage());
     }
     }
+    public List<BatchLot> getBatchListByWarehouse(int warehouseId) {
+    return batchLots.stream()
+        .filter(batch -> batch.getWarehouseId() == warehouseId)
+        .collect(Collectors.toList());
+}
+
 }

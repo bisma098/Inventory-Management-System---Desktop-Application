@@ -40,6 +40,9 @@ public class BatchLot {
     public String getWarehouseName() {
     return warehouse != null ? warehouse.getWarehouseName() : "";
     }
+    public int getWarehouseId() {
+    return warehouse != null ? warehouse.getWarehouseId() : -1;
+    }
 
     public LocalDate getManufactureDate() { return manufactureDate; }
     public void setManufactureDate(LocalDate manufactureDate) { this.manufactureDate = manufactureDate; }
@@ -58,6 +61,15 @@ public class BatchLot {
 
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
+
+public int getProductId() {
+    return product != null ? product.getProductId() : -1;
+}
+
+
+public int getQuantity() {
+    return availableQuantity;
+}
 
     // 🔥 NEW
     public int getPurchaseOrderLineId() { return purchaseOrderLineId; }

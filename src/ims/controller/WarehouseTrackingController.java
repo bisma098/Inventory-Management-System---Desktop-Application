@@ -3,9 +3,16 @@ package ims.controller;
 
 import javafx.fxml.FXML;
 import ims.model.Backup;
+import ims.model.BatchLot;
 import ims.model.User;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import ims.database.DatabaseConnection;
 
 import ims.database.BackupUtils;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +29,15 @@ public class WarehouseTrackingController {
     @FXML private TableColumn<Warehouse, Integer> colId;
     @FXML private TableColumn<Warehouse, String> colName;
     @FXML private TableColumn<Warehouse, String> colAddress;
+    @FXML private TableView<BatchLot> batchTable;
+@FXML private TableColumn<BatchLot, Integer> colBatchId;
+@FXML private TableColumn<BatchLot, Integer> colProductId;
+@FXML private TableColumn<BatchLot, Integer> colQuantity;
+@FXML private TableColumn<BatchLot, String> colExpiry;
+
+    @FXML private Label lblSelectedName;
+@FXML private Label lblSelectedAddress;
+@FXML private Label lblBatchCount;
 
     @FXML private TextField txtName;
     @FXML private TextField txtAddress;
@@ -31,9 +47,36 @@ public class WarehouseTrackingController {
         colId.setCellValueFactory(new PropertyValueFactory<>("warehouseId"));
         colName.setCellValueFactory(new PropertyValueFactory<>("warehouseName"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
+        colBatchId.setCellValueFactory(new PropertyValueFactory<>("batchId"));
+colProductId.setCellValueFactory(new PropertyValueFactory<>("productId"));
+colQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+colExpiry.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
+
+        warehouseTable.getSelectionModel().selectedItemProperty().addListener(
+    (obs, oldVal, newVal) -> {
+        if (newVal != null) {
+            showWarehouseDetails(newVal);
+        }
+    }
+);
 
         loadWarehouses();
     }
+    
+private void showWarehouseDetails(Warehouse warehouse) {
+
+    lblSelectedName.setText("Name: " + warehouse.getWarehouseName());
+    lblSelectedAddress.setText("Address: " + warehouse.getAddress());
+
+    // Load batches that belong to this warehouse
+    List<BatchLot> list =
+            DataController.getInstance().getBatchListByWarehouse(warehouse.getWarehouseId());
+
+    batchTable.setItems(FXCollections.observableArrayList(list));
+
+    lblBatchCount.setText("Total Batches: " + list.size());
+}
+
 
    private void loadWarehouses() {
     warehouseTable.setItems(
@@ -55,6 +98,6 @@ public class WarehouseTrackingController {
             loadWarehouses();
             txtName.clear();
             txtAddress.clear();
-        }
+    }
 }
 

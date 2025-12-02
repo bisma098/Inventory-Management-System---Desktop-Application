@@ -46,68 +46,14 @@ public class BatchTrackingController implements Initializable {
         loadBatches();
     }
     @FXML
-private void handleAddBatch() {
-    // Code to add a new batch (or just a placeholder for now)
-    System.out.println("Add Batch clicked");
+
+private void loadBatches() {
+    ObservableList<BatchLot> list = FXCollections.observableArrayList();
+
+    // Use in-memory list from DataController
+    list.addAll(DataController.getInstance().getBatchLots());
+
+    batchTable.setItems(list);
 }
 
-@FXML
-private void handleUpdateBatch() {
-    System.out.println("Update Batch clicked");
-}
-
-@FXML
-private void handleDeleteBatch() {
-    System.out.println("Delete Batch clicked");
-}
-
-
-    private void loadBatches() {
-        ObservableList<BatchLot> list = FXCollections.observableArrayList();
-
-        String query =
-    "SELECT b.batchId, b.manufactureDate, b.expiryDate, " +
-    "b.totalQuantity, b.availableQty, " +
-    "p.product_id, p.product_name, " +
-    "w.warehouseId, w.warehouseName " +
-    "FROM BatchLot b " +
-    "JOIN products p ON b.productId = p.product_id " +
-    "JOIN Warehouse w ON b.warehouseId = w.warehouseId";
-
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pst = conn.prepareStatement(query);
-             ResultSet rs = pst.executeQuery()) {
-
-            while (rs.next()) {
-                Product product = new Product(
-    rs.getInt("product_id"),
-    rs.getString("product_name")
-);
-
-Warehouse warehouse = new Warehouse(
-    rs.getInt("warehouseId"),
-    rs.getString("warehouseName")
-);
-
-
-                BatchLot batch = new BatchLot(
-    rs.getInt("batchId"),
-    rs.getDate("manufactureDate").toLocalDate(),
-    rs.getDate("expiryDate").toLocalDate(),
-    rs.getInt("totalQuantity"),
-    rs.getInt("availableQty"),
-    product,
-    warehouse
-);
-
-                list.add(batch);
-            }
-
-            batchTable.setItems(list);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
