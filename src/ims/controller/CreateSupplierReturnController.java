@@ -39,27 +39,22 @@ public void initialize() {
 }
 
 private void setupForm() {
-        // Populate combo boxes
         supplierComboBox.setItems(FXCollections.observableArrayList(dataController.getSuppliers()));
         productComboBox.setItems(FXCollections.observableArrayList(dataController.getProducts()));
 
-        // Set up cell value factories for combo boxes
-        setupComboBoxes();
+       setupComboBoxes();
         
-        // When supplier changes, filter products from that supplier
         supplierComboBox.setOnAction(event -> {
             productComboBox.setValue(null);
             batchComboBox.setValue(null);
             availableQtyLabel.setText("0");
         });
 
-        // When product changes, load available batches for that supplier-product combination
         productComboBox.setOnAction(event -> {
             loadAvailableBatches();
         });
 
-        // When batch changes, show available quantity
-        batchComboBox.setOnAction(event -> {
+         batchComboBox.setOnAction(event -> {
             updateAvailableQuantity();
         });
     }
@@ -150,26 +145,21 @@ private void loadAvailableBatches() {
         return;
     }
 
-    // Get batches for this supplier-product combination
+    // Get batches for this supplier-product combo
     List<BatchLot> availableBatches = dataController.getBatchLots().stream()
         .filter(batch -> {
-            // Check if batch has the selected product
             if (batch.getProduct() == null) return false;
             return batch.getProduct().getProductId() == selectedProduct.getProductId();
         })
         .filter(batch -> {
-            // Check if this batch came from the selected supplier
-            // We need to trace back through purchase order line to purchase order to supplier
             if (batch.getPurchaseOrderLine() == null) return false;
             
             PurchaseOrderLine poLine = batch.getPurchaseOrderLine();
             if (poLine.getProduct() == null) return false;
             
-            // Get the purchase order for this line
             PurchaseOrder purchaseOrder = findPurchaseOrderByLineId(poLine.getLineId());
             if (purchaseOrder == null || purchaseOrder.getSupplier() == null) return false;
             
-            // Check if the purchase order's supplier matches the selected supplier
             return purchaseOrder.getSupplier().getSupplierId() == selectedSupplier.getSupplierId();
         })
         .filter(batch -> batch.getAvailableQuantity() > 0) // Only batches with available quantity
@@ -184,7 +174,6 @@ private void loadAvailableBatches() {
     }
 }
 
-// Add this helper method to find purchase order by line ID
 private PurchaseOrder findPurchaseOrderByLineId(int lineId) {
     for (PurchaseOrder po : dataController.getPurchaseOrders()) {
         for (PurchaseOrderLine line : po.getOrderLines()) {
@@ -205,7 +194,7 @@ private void updateAvailableQuantity() {
     }
 
 private void setupReturnLinesTable() {
-        // Get columns
+      
         TableColumn<SupplierReturnLine, String> productCol = (TableColumn<SupplierReturnLine, String>) returnLinesTable.getColumns().get(0);
         TableColumn<SupplierReturnLine, String> batchCol = (TableColumn<SupplierReturnLine, String>) returnLinesTable.getColumns().get(1);
         TableColumn<SupplierReturnLine, Integer> quantityCol = (TableColumn<SupplierReturnLine, Integer>) returnLinesTable.getColumns().get(2);
@@ -213,7 +202,6 @@ private void setupReturnLinesTable() {
         TableColumn<SupplierReturnLine, Double> lineTotalCol = (TableColumn<SupplierReturnLine, Double>) returnLinesTable.getColumns().get(4);
         TableColumn<SupplierReturnLine, String> actionCol = (TableColumn<SupplierReturnLine, String>) returnLinesTable.getColumns().get(5);
 
-        // Set up cell value factories
         productCol.setCellValueFactory(cellData -> {
             Product product = cellData.getValue().getProduct();
             return new SimpleStringProperty(product != null ? product.getName() : "");
@@ -233,7 +221,6 @@ private void setupReturnLinesTable() {
         lineTotalCol.setCellValueFactory(cellData -> 
             new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
 
-        // Action column with remove button
         actionCol.setCellValueFactory(cellData -> new SimpleStringProperty("Remove"));
         actionCol.setCellFactory(column -> new TableCell<SupplierReturnLine, String>() {
             private final Button removeButton = new Button("Remove");
@@ -256,7 +243,7 @@ private void setupReturnLinesTable() {
             }
         });
 
-        // Format currency columns
+        
         unitPriceCol.setCellFactory(tc -> new TableCell<SupplierReturnLine, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -304,8 +291,6 @@ private void addReturnLine() {
             }
 
             int returnQty = Integer.parseInt(returnQtyText);
-
-            // Validate quantity
             if (returnQty <= 0) {
                 showStatus("Return quantity must be greater than 0", "error");
                 return;
@@ -316,7 +301,6 @@ private void addReturnLine() {
                 return;
             }
 
-            // Check if this batch is already in return lines
             for (SupplierReturnLine existingLine : returnLinesList) {
                 if (existingLine.getBatch() != null && existingLine.getBatch().getBatchId() == batch.getBatchId()) {
                     showStatus("This batch is already in the return list", "error");
@@ -329,14 +313,12 @@ private void addReturnLine() {
             newLine.setUnitPrice(product.getPrice());
             newLine.setTotalPrice(returnQty * product.getPrice());
 
-            // Add to the list
             returnLinesList.add(newLine);
             supplierComboBox.setDisable(true);
 
-            // Update total
             updateTotalAmount();
 
-            // Clear the form fields for next entry
+            // Clear the form fields 
             productComboBox.setValue(null);
             batchComboBox.setValue(null);
             returnQtyField.clear();
@@ -369,35 +351,30 @@ private void updateTotalAmount() {
 @FXML
 private void createSupplierReturn() {
         try {
-            // Validate
             if (supplierComboBox.getValue() == null) {
                 showStatus("Please select a supplier", "error");
                 return;
             }
-
             if (reasonField.getText().isEmpty()) {
                 showStatus("Please enter return reason", "error");
                 return;
             }
-
             if (returnLinesList.isEmpty()) {
                 showStatus("Please add at least one product to the return", "error");
                 return;
             }
 
-            // Create supplier return
             SupplierReturn newReturn = new SupplierReturn();
             newReturn.setSupplier(supplierComboBox.getValue());
             newReturn.setReturnDate(LocalDate.now());
             newReturn.setReason(reasonField.getText());
             newReturn.setTotalAmount(returnLinesList.stream().mapToDouble(SupplierReturnLine::getTotalPrice).sum());
 
-            // Add all return lines
+
             for (SupplierReturnLine line : returnLinesList) {
                 newReturn.addReturnLine(line);
             }
 
-            // Save to database
             dataController.addSupplierReturn(newReturn);
             boolean success = dataController.saveSupplierReturn(newReturn);
             
@@ -412,19 +389,15 @@ private void createSupplierReturn() {
             "Created Supplier Return #" + newReturn.getId() +" with Supplier "+ newReturn.getSupplier().getName()
             );
 
-            // Update batch quantities and product quantities
             for (SupplierReturnLine line : newReturn.getReturnLines()) {
                 BatchLot batch = line.getBatch();
                 if (batch != null) {
-                    // Decrease batch quantity
                     batch.setAvailableQuantity(batch.getAvailableQuantity() - line.getQuantity());
                     dataController.updateBatchQuantity(batch, -line.getQuantity());
                     
-                    // Decrease product quantity
                     line.getProduct().removeQuantity(line.getQuantity());
                     dataController.updateProductQuantity(line.getProduct(), -line.getQuantity());
 
-                    // Log inventory change for each product in the order
                         dataController.logInventoryChange(
                         currentUser.getUserId(),
                         line.getProduct().getProductId(),
@@ -438,19 +411,7 @@ private void createSupplierReturn() {
             }
 
             showStatus("Supplier return created successfully! Return ID: " + newReturn.getId(), "success");
-            
-            // Clear form and go back after success
             clearForm();
-            
-            // Optionally auto-navigate back after delay
-            new Thread(() -> {
-                try {
-                    Thread.sleep(2000);
-                    javafx.application.Platform.runLater(this::goBack);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }).start();
 
         } catch (Exception e) {
             showStatus("Error creating supplier return: " + e.getMessage(), "error");

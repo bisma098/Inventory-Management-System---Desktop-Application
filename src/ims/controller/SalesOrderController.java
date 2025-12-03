@@ -39,12 +39,10 @@ public class SalesOrderController {
         setupOrderLinesTable();
         loadSalesOrders();
         
-        // Initially hide the details section
         orderDetailsSection.setVisible(false);
     }
     
     private void setupSalesOrdersTable() {
-        // Get the columns
         TableColumn<SalesOrder, Integer> orderIdCol = (TableColumn<SalesOrder, Integer>) salesOrdersTable.getColumns().get(0);
         TableColumn<SalesOrder, String> customerCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(1);
         TableColumn<SalesOrder, String> dateCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(2);
@@ -53,7 +51,6 @@ public class SalesOrderController {
         TableColumn<SalesOrder, String> actionCol = (TableColumn<SalesOrder, String>) salesOrdersTable.getColumns().get(5);
         
          salesOrdersTable.setItems(salesOrdersList);
-        // Set up cell value factories for purchase orders
         orderIdCol.setCellValueFactory(cellData -> 
             new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
         
@@ -77,7 +74,6 @@ public class SalesOrderController {
         itemsCol.setCellValueFactory(cellData -> 
             new SimpleIntegerProperty(cellData.getValue().getOrderLines().size()).asObject());
         
-        // Action column with "View Details" button
         actionCol.setCellValueFactory(cellData -> new SimpleStringProperty("View Details"));
         actionCol.setCellFactory(column -> new TableCell<SalesOrder, String>() {
             private final Button viewDetailsButton = new Button("View Details");
@@ -100,7 +96,6 @@ public class SalesOrderController {
             }
         });
         
-        // Format currency column
         totalCol.setCellFactory(tc -> new TableCell<SalesOrder, Double>() {
             @Override
             protected void updateItem(Double total, boolean empty) {
@@ -119,7 +114,6 @@ public class SalesOrderController {
     }
     
     private void setupOrderLinesTable() {
-        // Get the columns
         TableColumn<SalesOrderLine, String> productCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(0);
         TableColumn<SalesOrderLine, String> warehouseCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(1);
         TableColumn<SalesOrderLine, String> batchCol = (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(2); 
@@ -128,7 +122,6 @@ public class SalesOrderController {
         TableColumn<SalesOrderLine, Double> lineTotalCol = (TableColumn<SalesOrderLine, Double>) orderLinesTable.getColumns().get(5);
 
         
-        // Set up cell value factories for order lines
         productCol.setCellValueFactory(cellData -> {
             Product product = cellData.getValue().getProduct();
             return new SimpleStringProperty(product != null ? product.getName() : "");
@@ -148,7 +141,6 @@ public class SalesOrderController {
         lineTotalCol.setCellValueFactory(cellData -> 
             new SimpleDoubleProperty(cellData.getValue().getQuantity() * cellData.getValue().getProduct().getPrice()).asObject());
         
-        // Batch column
         batchCol.setCellValueFactory(cellData -> {
             BatchLot batchLot = cellData.getValue().getBatch();
             if (batchLot != null) {
@@ -158,7 +150,6 @@ public class SalesOrderController {
             }
         });
         
-        // Format currency columns
         unitPriceCol.setCellFactory(tc -> new TableCell<SalesOrderLine, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -199,19 +190,16 @@ public class SalesOrderController {
     private void showOrderDetails(SalesOrder order) {
         selectedOrder = order;
         
-        // Load order lines for the selected order
         currentOrderLinesList.clear();
         currentOrderLinesList.addAll(order.getOrderLines());
         
-        // Update the details section title
         Label titleLabel = (Label) orderDetailsSection.getChildren().get(0);
         titleLabel.setText("Order Details for Sales Order ID- " + order.getOrderId());
         
         Customer c = order.getCustomer();
         customerNameLabel.setText("Name: " + c.getName());
         customerContactLabel.setText("Contact: " + c.getContactInfo());
-
-        // Show the details section
+        
         orderDetailsSection.setVisible(true);
         
     }

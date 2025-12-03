@@ -26,9 +26,13 @@
         <Button text="🧑‍💼 User Activity Log" fx:id="btnUserActivity" styleClass="nav-btn" onAction="#showUserActivityLog"/>
         <Button text="📋 Inventory Audit Log" fx:id="btnAuditLog" styleClass="nav-btn" onAction="#showInventoryAuditLog"/>
         <Button text="🗂 Categories" fx:id="btnCategories" styleClass="nav-btn" onAction="#showCategories"/>
-        <Button text="🔍 Product Tracking" fx:id="btnProductTracking" styleClass="nav-btn" onAction="#showProductTracking"/>
-        <Button text="👥 Users" fx:id="btnUsers" styleClass="nav-btn" onAction="#showUsers"/>
+        <Button text="🏭 Warehouse Tracking" fx:id="btnUser" styleClass="nav-btn" onAction="#WarehouseTracking"/>
+        <Button text="📦 Batch Tracking"  fx:id="btnProductTracking" styleClass="nav-btn" onAction="#openBatchTracking" />
+        <Button text="👥 Add Users" fx:id="btnUsers" styleClass="nav-btn" onAction="#openAddUser"/>
+        <Button text="👥 Suppliers" fx:id="btnSupplier" styleClass="nav-btn" onAction="#showSupplier"/>
         <Button text="🏠 Warehouse" fx:id="btnWarehouse" styleClass="nav-btn" onAction="#showWarehouse"/>
+        <Button text="💾 Database" fx:id="btnDatabase" styleClass="nav-btn" onAction="#showDatabase"/>
+
         
     </VBox>
 

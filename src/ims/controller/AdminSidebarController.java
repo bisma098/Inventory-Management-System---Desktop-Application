@@ -3,8 +3,14 @@ package ims.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
 import java.io.IOException;
 
 public class AdminSidebarController {
@@ -20,10 +26,32 @@ public class AdminSidebarController {
     }
 
     @FXML
-    private void showReports(ActionEvent event) {
-        System.out.println("Navigating to Reports...");
-        // TODO: Load Reports view
+private void showReports(ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ims/view/ReportsDialog.fxml"));
+        Parent root = loader.load();
+
+        ReportsDialogController controller = loader.getController();
+        controller.setMainStage((Stage)((Node)event.getSource()).getScene().getWindow());
+
+        Scene scene = new Scene(root);
+        //scene.getStylesheets().add(getClass().getResource("/ims/css/reports-dialog.css").toExternalForm());
+         // ADD YOUR POPUP CSS
+        scene.getStylesheets().add(getClass().getResource("/ims/view/popup.css").toExternalForm());
+        Stage popup = new Stage();
+        controller.setPopupStage(popup);   // << set popup stage
+
+        popup.setScene(scene);
+        popup.setTitle("Select Report");
+        popup.setResizable(false);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.centerOnScreen();
+        popup.show();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     @FXML
     private void showUserActivityLog(ActionEvent event) {
@@ -37,26 +65,39 @@ public class AdminSidebarController {
 
     @FXML
     private void showCategories(ActionEvent event) {
-        System.out.println("Navigating to Categories...");
-        // TODO: Load Categories management view
+        loadContent("/ims/view/AddCategories.fxml");
     }
 
     @FXML
-    private void showProductTracking(ActionEvent event) {
-        System.out.println("Navigating to Product Tracking...");
-        // TODO: Load Product Tracking view
+    private void WarehouseTracking(ActionEvent event) {
+        loadContent("/ims/view/WarehouseTracking.fxml");
+        
+    }
+    
+    @FXML
+    public void openBatchTracking(ActionEvent event)  {
+    loadContent("/ims/view/BatchTracking.fxml"); 
     }
 
     @FXML
-    private void showUsers(ActionEvent event) {
-        System.out.println("Navigating to Users...");
-        // TODO: Load Users management view
-    }
+    public void openAddUser(ActionEvent event) {
+        loadContent("/ims/view/AddUser.fxml");
+}
 
       @FXML
     private void showWarehouse() {
         loadContent("/ims/view/Warehouse.fxml");
 
+    }
+    
+    @FXML
+    private void showDatabase() {
+       loadContent("/ims/view/Backup.fxml");
+    }
+    
+    @FXML
+    private void showSupplier() {
+       loadContent("/ims/view/AddSupplier.fxml");
     }
     
     private void loadContent(String fxmlPath) {

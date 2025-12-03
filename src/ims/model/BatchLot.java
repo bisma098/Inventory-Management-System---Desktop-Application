@@ -12,8 +12,8 @@ public class BatchLot {
     private Warehouse warehouse;
     private Product product;
 
-    private int purchaseOrderLineId;              // 🔥 Added for linking
-    private PurchaseOrderLine purchaseOrderLine;  // Final object link
+    private int purchaseOrderLineId;              
+    private PurchaseOrderLine purchaseOrderLine;  
 
     public BatchLot() {}
 
@@ -52,6 +52,17 @@ public class BatchLot {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
+
+    public int getProductId() {
+        return product != null ? product.getProductId() : -1;
+    }
+
+
+    public int getQuantity() {
+        return availableQuantity;
+    }
+
+
     // 🔥 NEW
     public int getPurchaseOrderLineId() { return purchaseOrderLineId; }
     public void setPurchaseOrderLineId(int purchaseOrderLineId) { this.purchaseOrderLineId = purchaseOrderLineId; }
@@ -78,5 +89,13 @@ public class BatchLot {
     public void addQuantity(int qty)
     {
         availableQuantity+=qty;
+    }
+
+    public String getProductName() {
+        return product != null ? product.getName() : "—";
+    }
+
+    public String getWarehouseName() {
+        return warehouse != null ? warehouse.getWarehouseName() : "—";
     }
 }

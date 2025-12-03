@@ -84,7 +84,7 @@
                     </VBox>
                 </HBox>
 
-                <!-- Add Order Line (Batch-based stock tracking) -->
+                <!-- Add Order Line -->
                 <VBox spacing="10"
                       style="-fx-border-color: #ccfbf1; -fx-border-width: 1;
                              -fx-background-color: #f0fdfa; -fx-border-radius: 8; -fx-padding: 15;">

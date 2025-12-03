@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21.0.9"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.SupplierPerformanceController">
+
+    <!-- Top bar with title and buttons -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <Label text="Supplier Performance Report" style="-fx-font-size: 24px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Download CSV" fx:id="btnDownload"/>
+            <Button text="Back" fx:id="btnBack"/>
+        </HBox>
+    </top>
+
+    <!-- Table in center -->
+    <center>
+        <TableView fx:id="tableReport" prefWidth="800">
+            <columns>
+                <TableColumn fx:id="colSupplierId" text="Supplier ID" prefWidth="100"/>
+                <TableColumn fx:id="colSupplierName" text="Supplier Name" prefWidth="200"/>
+                <TableColumn fx:id="colTotalOrders" text="Total Orders" prefWidth="100"/>
+                <TableColumn fx:id="colTotalSupplied" text="Total Supplied" prefWidth="150"/>
+                <TableColumn fx:id="colTotalReturned" text="Total Returned" prefWidth="150"/>
+                <TableColumn fx:id="colNetSupplied" text="Net Supplied" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

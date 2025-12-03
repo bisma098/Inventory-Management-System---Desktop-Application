@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.AddSupplierController">
+
+    <!-- HEADER -->
+    <top>
+        <HBox style="-fx-background-color: #008080; -fx-padding: 15;">
+            <Label text="Add Supplier"
+                   style="-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30;">
+            
+            <GridPane hgap="15" vgap="15">
+
+                <!-- Supplier Name -->
+                <Label text="Supplier Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtSupplierName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <!-- Contact Info -->
+                <Label text="Contact Info:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtSupplierContactInfo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            </GridPane>
+
+            <Button text="➕ Add Supplier"
+                    onAction="#addSupplier"
+                    style="-fx-background-color: #008080; -fx-text-fill: white;
+                           -fx-font-size: 16px; -fx-padding: 10 25; -fx-background-radius: 8;" />
+        </VBox>
+    </center>
+
+</BorderPane>

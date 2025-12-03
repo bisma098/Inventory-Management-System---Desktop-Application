@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ims.controller.AddCatController"
+      spacing="15"
+      style="-fx-padding: 20;">
+
+    <TableView fx:id="tblCategories" style="-fx-background-color: white;">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="80"
+                         style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+            <TableColumn fx:id="colName" text="Category Name" prefWidth="200"
+                         style="-fx-alignment: CENTER_LEFT;"/>
+        </columns>
+    </TableView>
+
+    <Button text="➕ Add Category"
+            fx:id="btnAddCategory"
+            onAction="#addCategory"
+            style="-fx-background-color: #008080; -fx-text-fill: white;
+                   -fx-font-size: 16px; -fx-padding: 10 20; -fx-background-radius: 8;"/>
+</VBox>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.SalesVsStockController">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+            <Label text="Sales vs Stock Report" style="-fx-font-size: 24px;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Download CSV" fx:id="btnDownload"/>
+            <Button text="Back" fx:id="btnBack"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tableReport" prefWidth="900">
+            <columns>
+                <TableColumn text="Product ID" fx:id="colProductId"/>
+                <TableColumn text="Product Name" fx:id="colProductName"/>
+                <TableColumn text="Category" fx:id="colCategory"/>
+                <TableColumn text="Total Stock" fx:id="colTotalStock"/>
+                <TableColumn text="Total Sold" fx:id="colTotalSold"/>
+                <TableColumn text="Stock Remaining" fx:id="colStockRemaining"/>
+            </columns>
+        </TableView>
+    </center>
+
+</BorderPane>

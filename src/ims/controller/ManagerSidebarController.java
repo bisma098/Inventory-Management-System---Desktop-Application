@@ -1,5 +1,6 @@
 package ims.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -45,8 +46,14 @@ public class ManagerSidebarController {
     }
 
     @FXML
-    private void showProductTracking() {
-        System.out.println("Product Tracking clicked");
+    private void WarehouseTracking(ActionEvent event) {
+        loadContent("/ims/view/WarehouseTracking.fxml");
+        
+    }
+    
+    @FXML
+    public void openBatchTracking(ActionEvent event)  {
+    loadContent("/ims/view/BatchTracking.fxml"); 
     }
 
     private void loadContent(String fxmlPath) {
@@ -79,8 +86,7 @@ public class ManagerSidebarController {
     
     @FXML
     public void initialize() {
-        // Use Platform.runLater to delay the initial load until the scene is fully set up
-        javafx.application.Platform.runLater(() -> {
+       javafx.application.Platform.runLater(() -> {
             showInventory();
         });
     }

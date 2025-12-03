@@ -3,9 +3,15 @@ package ims.controller;
 import ims.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.layout.BorderPane;
 import ims.database.DatabaseConnection;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.sql.Date;  // For SQL Date operations
 import java.time.LocalDate;
 
@@ -125,6 +131,12 @@ public User findUserByCredentials(String username, String password, String role)
 public List<User> getUsers() {
     return new ArrayList<>(users);
 }
+public void addUser(User user) {
+    if (user != null) {
+        users.add(user);
+    }
+}
+
     
 public void setCurrentUser(User user)
 {
@@ -151,7 +163,7 @@ private void loadCategories() {
         }
     }
     
-private void loadProducts() {
+public void loadProducts() {
         // Get a fresh connection for products
         try (Connection conn = DatabaseConnection.getConnection()) {
             String query = "SELECT p.*, c.category_name FROM products p " +
@@ -830,6 +842,12 @@ public List<BatchLot> getBatchesByProductId(int productId) {
     return result;
 }
 
+public List<BatchLot> getBatchListByWarehouse(int warehouseId) {
+    return batchLots.stream()
+        .filter(batch -> batch.getWarehouse().getWarehouseId() == warehouseId)
+        .collect(Collectors.toList());
+}
+
 public List<SalesOrder> getSalesOrdersByCustomer(int customerId) {
     List<SalesOrder> result = new ArrayList<>();
     for (SalesOrder order : salesOrders) {
@@ -906,6 +924,9 @@ public List<InventoryAuditLog> getInventoryAuditLogs() {
    return inventoryAuditLogs;
 }
 
+public List<Product> getAllProducts(){
+    return products;
+}
 
 
 public void addPurchaseOrder(PurchaseOrder po)
@@ -924,6 +945,14 @@ public void addSalesOrder(SalesOrder order) {
 public void addCustomer(Customer customer) {
     customers.add(customer);
 }
+public void addSupplierToList(Supplier supplier) {
+    suppliers.add(supplier);
+}
+
+public void addCategoryToList(Category category) {
+    categories.add(category);
+}
+
 
 public void addSupplierReturn(SupplierReturn supplierReturn) {
     if (!supplierReturns.contains(supplierReturn)) {

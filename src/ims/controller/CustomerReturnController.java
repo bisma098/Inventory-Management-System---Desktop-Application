@@ -45,9 +45,6 @@ public class CustomerReturnController {
         returnDetailsSection.setManaged(false);
     }
 
-    // ------------------------------------------------------------
-    // TABLE SETUP (Main Customer Return Table)
-    // ------------------------------------------------------------
     private void setupReturnTable() {
 
         TableColumn<CustomerReturn, Integer> idCol =
@@ -122,7 +119,6 @@ public class CustomerReturnController {
             }
         });
 
-        // Format currency column
         totalCol.setCellFactory(col -> new TableCell<CustomerReturn, Double>() {
             @Override
             protected void updateItem(Double amount, boolean empty) {
@@ -135,9 +131,6 @@ public class CustomerReturnController {
         customerReturnTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    // ------------------------------------------------------------
-    // RETURN LINE TABLE SETUP
-    // ------------------------------------------------------------
     private void setupReturnLinesTable() {
 
         TableColumn<CustomerReturnLine, String> productCol =
@@ -196,18 +189,13 @@ public class CustomerReturnController {
         returnLinesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    // ------------------------------------------------------------
-    // LOAD CUSTOMER RETURNS
-    // ------------------------------------------------------------
+
     private void loadCustomerReturns() {
         returnList.clear();
         returnList.addAll(dataController.getCustomerReturns());
     }
 
-    // ------------------------------------------------------------
-    // SHOW DETAILS
-    // ------------------------------------------------------------
-    private void showReturnDetails(CustomerReturn cr) {
+ private void showReturnDetails(CustomerReturn cr) {
         selectedReturn = cr;
 
         returnLinesList.clear();
@@ -230,9 +218,6 @@ public class CustomerReturnController {
         selectedReturn = null;
     }
 
-    // ------------------------------------------------------------
-    // NAVIGATION
-    // ------------------------------------------------------------
     @FXML
     private void showCreateForm() {
         try {

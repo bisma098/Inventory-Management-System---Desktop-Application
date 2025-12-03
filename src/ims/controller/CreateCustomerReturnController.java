@@ -43,10 +43,6 @@ public class CreateCustomerReturnController {
         setupReturnLinesTable();
     }
 
-
-    // ------------------------------------------------------------
-    // FORM SETUP
-    // ------------------------------------------------------------
     private void setupForm() {
 
         // Load customers
@@ -69,9 +65,6 @@ public class CreateCustomerReturnController {
         });
 
         customerComboBox.setOnAction(e -> loadSalesOrders());
-        // -----------------------------
-        // Sales Order Combo — formatted once
-        // -----------------------------
         salesOrderComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(SalesOrder so, boolean empty) {
@@ -90,9 +83,7 @@ public class CreateCustomerReturnController {
         });
 
         salesOrderComboBox.setOnAction(e -> loadOrderLines());
-        // -----------------------------
-        // Sales Order Line Combo
-        // -----------------------------
+        
         orderLineComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(SalesOrderLine line, boolean empty) {
@@ -166,9 +157,6 @@ public class CreateCustomerReturnController {
     }
 
 
-    // ------------------------------------------------------------
-    // RETURN LINE TABLE
-    // ------------------------------------------------------------
     private void setupReturnLinesTable() {
 
         TableColumn<CustomerReturnLine, String> productCol =
@@ -228,10 +216,7 @@ public class CreateCustomerReturnController {
         returnLinesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-
-    // ------------------------------------------------------------
     // ADD RETURN LINE
-    // ------------------------------------------------------------
     @FXML
     private void addReturnLine() {
         try {
@@ -293,24 +278,18 @@ public class CreateCustomerReturnController {
         }
     }
 
-
-    // ------------------------------------------------------------
-    // TOTAL
-    // ------------------------------------------------------------
-    private void updateTotal() {
+// TOTAL
+private void updateTotal() {
         double total = returnLinesList.stream()
                 .mapToDouble(l -> l.getQuantity() * l.getUnitPrice())
                 .sum();
 
         totalAmountLabel.setText(String.format("Total: $%.2f", total));
-    }
+}
 
-
-    // ------------------------------------------------------------
-    // SAVE CUSTOMER RETURN
-    // ------------------------------------------------------------
-    @FXML
-    private void createCustomerReturn() {
+ // SAVE CUSTOMER RETURN
+ @FXML
+private void createCustomerReturn() {
         try {
             if (customerComboBox.getValue() == null) {
                 showStatus("Select customer", "error");
@@ -393,9 +372,6 @@ public class CreateCustomerReturnController {
     }
 
 
-    // ------------------------------------------------------------
-    // NAVIGATION
-    // ------------------------------------------------------------
     @FXML
     private void goBack() {
         try {
@@ -407,9 +383,6 @@ public class CreateCustomerReturnController {
     }
 
 
-    // ------------------------------------------------------------
-    // STATUS MESSAGE
-    // ------------------------------------------------------------
     private void showStatus(String msg, String type) {
         statusLabel.setText(msg);
         statusLabel.setVisible(true);

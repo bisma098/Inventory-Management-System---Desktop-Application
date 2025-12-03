@@ -118,11 +118,9 @@ public class CreateSalesOrderController {
         productComboBox.setOnAction(e -> loadBatchesForProduct());
     }
 
-    // ------------------------------------------------------------
-    // LOAD BATCHES FOR SELECTED PRODUCT
-    // ------------------------------------------------------------
-    @FXML
-    private void loadBatchesForProduct() {
+// LOAD BATCHES FOR SELECTED PRODUCT
+@FXML
+private void loadBatchesForProduct() {
         Product p = productComboBox.getValue();
         if (p == null) return;
 
@@ -148,9 +146,7 @@ public class CreateSalesOrderController {
         unitPriceField.setText(String.format("%.2f", batch.getProduct().getPrice()));
     }
 
-// ------------------------------------------------------------
 // ORDER LINE TABLE SETUP
-// ------------------------------------------------------------
 private void setupOrderLinesTable() {
         TableColumn<SalesOrderLine, String> productCol =
                 (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(0);
@@ -211,9 +207,7 @@ private void setupOrderLinesTable() {
 
     }
 
-// ------------------------------------------------------------
 // ADD ORDER LINE
-// ------------------------------------------------------------
 @FXML
 private void addSalesOrderLine() {
         try {
@@ -282,9 +276,7 @@ private void addSalesOrderLine() {
         showStatus("Removed", "info");
 }
 
-// ------------------------------------------------------------
 // TOTAL
-// ------------------------------------------------------------
 private void updateTotal() {
     double total = orderLinesList.stream()
             .mapToDouble(SalesOrderLine::getSubTotal)
@@ -293,18 +285,14 @@ private void updateTotal() {
     totalAmountLabel.setText(String.format("Total: $%.2f", total));
 }
 
-// ------------------------------------------------------------
 // SAVE SALES ORDER
-// ------------------------------------------------------------
 
 @FXML
 private void toggleCustomerForm() {
     if (newCustomerBox.isVisible()) {
-        // Hide the form
         newCustomerBox.setVisible(false);
         newCustomerBox.setManaged(false);
     } else {
-        // Show the form
         newCustomerBox.setVisible(true);
         newCustomerBox.setManaged(true);
     }
@@ -324,7 +312,6 @@ private void saveNewCustomer() {
     customer.setName(name);
     customer.setContactInfo(contact);
 
-    // Save in DB
     boolean saved = dataController.saveCustomer(customer);
 
     if (!saved) {
@@ -332,10 +319,8 @@ private void saveNewCustomer() {
         return;
     }
 
-    // Add to cache
     dataController.addCustomer(customer);
 
-    // Refresh ComboBox
     customerComboBox.getItems().add(customer);
     customerComboBox.setValue(customer);
 
@@ -381,7 +366,7 @@ private void createSalesOrder() {
             "Created Sales Order #" + so.getOrderId() +" with Customer "+ so.getCustomer().getName()
             );
 
-            // Update batch + product stock
+            
             for (SalesOrderLine line : so.getOrderLines()) {
 
                 BatchLot batch = line.getBatch();
@@ -392,7 +377,7 @@ private void createSalesOrder() {
                 p.removeQuantity(line.getQuantity());
                 dataController.updateProductQuantity(p, -line.getQuantity());
 
-                // Log inventory change for each product in the order
+               
                         dataController.logInventoryChange(
                         currentUser.getUserId(),
                         line.getProduct().getProductId(),
@@ -429,11 +414,8 @@ private void createSalesOrder() {
         updateTotal();
     }
 
-    // ------------------------------------------------------------
-    // NAVIGATION
-    // ------------------------------------------------------------
-    @FXML
-    private void goBack() {
+@FXML
+private void goBack() {
         try {
             BorderPane root = (BorderPane) customerComboBox.getScene().getRoot();
             root.setCenter(FXMLLoader.load(getClass().getResource("/ims/view/SalesOrder.fxml")));
@@ -442,10 +424,7 @@ private void createSalesOrder() {
         }
     }
 
-    // ------------------------------------------------------------
-    // STATUS MESSAGE
-    // ------------------------------------------------------------
-    private void showStatus(String msg, String type) {
+ private void showStatus(String msg, String type) {
         statusLabel.setText(msg);
         statusLabel.setVisible(true);
 

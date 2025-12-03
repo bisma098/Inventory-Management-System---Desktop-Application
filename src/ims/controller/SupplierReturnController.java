@@ -34,12 +34,10 @@ public class SupplierReturnController {
         setupReturnLinesTable();
         loadSupplierReturns();
         
-        // Initially hide the details section
         returnDetailsSection.setVisible(false);
     }
     
     private void setupSupplierReturnsTable() {
-        // Get the columns
         TableColumn<SupplierReturn, Integer> returnIdCol = (TableColumn<SupplierReturn, Integer>) supplierReturnsTable.getColumns().get(0);
         TableColumn<SupplierReturn, String> supplierCol = (TableColumn<SupplierReturn, String>) supplierReturnsTable.getColumns().get(1);
         TableColumn<SupplierReturn, String> dateCol = (TableColumn<SupplierReturn, String>) supplierReturnsTable.getColumns().get(2);
@@ -49,7 +47,6 @@ public class SupplierReturnController {
         
         supplierReturnsTable.setItems(supplierReturnsList);
         
-        // Set up cell value factories for supplier returns
         returnIdCol.setCellValueFactory(cellData -> 
             new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         
@@ -92,7 +89,6 @@ public class SupplierReturnController {
             }
         });
         
-        // Format currency column
         totalCol.setCellFactory(tc -> new TableCell<SupplierReturn, Double>() {
             @Override
             protected void updateItem(Double total, boolean empty) {
@@ -111,14 +107,12 @@ public class SupplierReturnController {
     }
     
     private void setupReturnLinesTable() {
-        // Get the columns
         TableColumn<SupplierReturnLine, String> productCol = (TableColumn<SupplierReturnLine, String>) returnLinesTable.getColumns().get(0);
         TableColumn<SupplierReturnLine, String> batchCol = (TableColumn<SupplierReturnLine, String>) returnLinesTable.getColumns().get(1);
         TableColumn<SupplierReturnLine, Integer> quantityCol = (TableColumn<SupplierReturnLine, Integer>) returnLinesTable.getColumns().get(2);
         TableColumn<SupplierReturnLine, Double> unitPriceCol = (TableColumn<SupplierReturnLine, Double>) returnLinesTable.getColumns().get(3);
         TableColumn<SupplierReturnLine, Double> lineTotalCol = (TableColumn<SupplierReturnLine, Double>) returnLinesTable.getColumns().get(4);
 
-        // Set up cell value factories for return lines
         productCol.setCellValueFactory(cellData -> {
             Product product = cellData.getValue().getProduct();
             return new SimpleStringProperty(product != null ? product.getName() : "");
@@ -142,7 +136,6 @@ public class SupplierReturnController {
         lineTotalCol.setCellValueFactory(cellData -> 
             new SimpleDoubleProperty(cellData.getValue().getTotalPrice()).asObject());
         
-        // Format currency columns
         unitPriceCol.setCellFactory(tc -> new TableCell<SupplierReturnLine, Double>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -180,15 +173,12 @@ public class SupplierReturnController {
     private void showReturnDetails(SupplierReturn returnItem) {
         this.selectedReturn = returnItem;
         
-        // Load return lines for the selected return
         currentReturnLinesList.clear();
         currentReturnLinesList.addAll(returnItem.getReturnLines());
         
-        // Update the details section title
         Label titleLabel = (Label) returnDetailsSection.getChildren().get(0);
         titleLabel.setText("Return Lines for Return ID: " + returnItem.getId());
         
-        // Show the details section
         returnDetailsSection.setVisible(true);
     }
     

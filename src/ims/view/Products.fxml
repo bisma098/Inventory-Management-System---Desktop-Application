@@ -28,46 +28,40 @@
     <!-- Products Table -->
     <VBox spacing="10">
         <Label text="Product List" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <TableView fx:id="productTable" prefHeight="400">
+        <TableView fx:id="productTable" prefHeight="400" onMouseClicked="#loadSelectedProduct">
             <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
-                <TableColumn fx:id="colName" text="Name" prefWidth="150"/>
-                <TableColumn fx:id="colSKU" text="SKU" prefWidth="100"/>
-                <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
-                <TableColumn fx:id="colQty" text="Qty" prefWidth="80"/>
-                <TableColumn fx:id="colExpiry" text="Expiry" prefWidth="120"/>
-                <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+                <TableColumn fx:id="colId" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="colName" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="colSKU" text="SKU" prefWidth="150"/>
+                <TableColumn fx:id="colPrice" text="Price" prefWidth="120"/>
+                <TableColumn fx:id="colCategory" text="Category" prefWidth="150"/>
             </columns>
         </TableView>
     </VBox>
 
-    <!-- Add Product Section -->
+    <!-- Add/Update Product Section -->
     <VBox spacing="15">
-        <Label text="Add Product" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+        <Label text="Add / Update Product" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
 
         <GridPane hgap="10" vgap="10">
             <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-            <TextField fx:id="addNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <TextField fx:id="addNameField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="250"/>
 
             <Label text="SKU:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-            <TextField fx:id="addSKUField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <TextField fx:id="addSKUField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="250"/>
 
             <Label text="Price:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <TextField fx:id="addPriceField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <TextField fx:id="addPriceField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="250"/>
 
-            <Label text="Qty:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-            <TextField fx:id="addQtyField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-            <Label text="Expiry:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-            <DatePicker fx:id="addExpiryField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-
-            <Label text="Category:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-            <TextField fx:id="addCategoryField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Category:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="addCategoryField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="250"/>
         </GridPane>
 
         <HBox spacing="10">
             <Button text="Add Product" fx:id="btnAdd" onAction="#addProduct"/>
+            <Button text="Update Product" fx:id="btnUpdate" onAction="#updateProduct"/>
             <Button text="Delete Selected" fx:id="btnDelete" onAction="#deleteProduct"/>
+            <Button text="Clear Form" onAction="#clearAddFields"/>
         </HBox>
     </VBox>
 

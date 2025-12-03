@@ -19,6 +19,11 @@ public class Product {
         this.category = category;
     }
 
+     public Product(int productId, String name) {
+        this.productId = productId;
+        this.name = name;
+     }
+
     // Getters and Setters
     public int getProductId() { return productId; }
     public void setProductId(int productId) { this.productId = productId; }

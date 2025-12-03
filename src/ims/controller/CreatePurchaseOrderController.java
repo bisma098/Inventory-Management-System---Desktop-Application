@@ -366,18 +366,8 @@ private void createPurchaseOrder() {
 
         showStatus("Purchase order created successfully! Order ID: " + newOrder.getOrderId(), "success");
         
-        // Clear form and go back after success
+
         clearForm();
-        
-        // Optionally auto-navigate back after delay
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                javafx.application.Platform.runLater(this::goBack);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }).start();
 
     } catch (Exception e) {
         showStatus("Error creating purchase order: " + e.getMessage(), "error");

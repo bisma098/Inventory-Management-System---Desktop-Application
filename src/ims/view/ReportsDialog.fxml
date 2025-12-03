@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="420" prefHeight="380"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ims.controller.ReportsDialogController"
+            styleClass="dialog-pane">
+
+    <children>
+        <VBox alignment="CENTER" spacing="20"
+              AnchorPane.topAnchor="20"
+              AnchorPane.bottomAnchor="20"
+              AnchorPane.leftAnchor="20"
+              AnchorPane.rightAnchor="20">
+
+            <Label text="Select Report" styleClass="dialog-title" />
+
+            <Button text="📦  Stock Availability Report"
+                    styleClass="dialog-btn"
+                    onAction="#openStock"/>
+
+            <Button text="📊  Sales vs Stock Report"
+                    styleClass="dialog-btn"
+                    onAction="#openSales"/>
+
+            <Button text="⚡  Slow/Fast Moving Items"
+                    styleClass="dialog-btn"
+                    onAction="#openSlowFast"/>
+
+            <Button text="🤝  Supplier Performance Report"
+                    styleClass="dialog-btn"
+                    onAction="#openSupplier"/>
+
+        </VBox>
+    </children>
+
+</AnchorPane>
