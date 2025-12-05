@@ -57,10 +57,9 @@ public class NotificationService {
         
         Alert alert = new Alert(AlertType.WARNING);
         alert.setTitle("Stock Alerts");
-        alert.setHeaderText(null); // Remove the big header
+        alert.setHeaderText(null); 
         alert.setContentText(message.toString());
         
-        // Set smaller dialog size
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.setPrefSize(400, 300);
         

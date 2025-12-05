@@ -37,20 +37,20 @@ public class PurchaseOrderController {
         orderDetailsSection.setVisible(false);
     }
     
-    private void setupPurchaseOrdersTable() {
-        TableColumn<PurchaseOrder, Integer> orderIdCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(0);
-        TableColumn<PurchaseOrder, String> supplierCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(1);
-        TableColumn<PurchaseOrder, String> dateCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(2);
-        TableColumn<PurchaseOrder, Double> totalCol = (TableColumn<PurchaseOrder, Double>) purchaseOrdersTable.getColumns().get(3);
-        TableColumn<PurchaseOrder, Integer> itemsCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(4);
-        TableColumn<PurchaseOrder, String> actionCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(5);
+private void setupPurchaseOrdersTable() {
+    TableColumn<PurchaseOrder, Integer> orderIdCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(0);
+    TableColumn<PurchaseOrder, String> supplierCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(1);
+    TableColumn<PurchaseOrder, String> dateCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(2);
+    TableColumn<PurchaseOrder, Double> totalCol = (TableColumn<PurchaseOrder, Double>) purchaseOrdersTable.getColumns().get(3);
+    TableColumn<PurchaseOrder, Integer> itemsCol = (TableColumn<PurchaseOrder, Integer>) purchaseOrdersTable.getColumns().get(4);
+    TableColumn<PurchaseOrder, String> actionCol = (TableColumn<PurchaseOrder, String>) purchaseOrdersTable.getColumns().get(5);
         
-         purchaseOrdersTable.setItems(purchaseOrdersList);
-        orderIdCol.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
+    purchaseOrdersTable.setItems(purchaseOrdersList);
+    orderIdCol.setCellValueFactory(cellData -> 
+    new SimpleIntegerProperty(cellData.getValue().getOrderId()).asObject());
         
-        supplierCol.setCellValueFactory(cellData -> {
-            Supplier supplier = cellData.getValue().getSupplier();
+    supplierCol.setCellValueFactory(cellData -> {
+        Supplier supplier = cellData.getValue().getSupplier();
             return new SimpleStringProperty(supplier != null ? supplier.getName() : "Unknown");
         });
         

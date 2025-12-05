@@ -42,17 +42,12 @@ public class CreateSalesOrderController {
         setupOrderLinesTable();
     }
 
-    // ------------------------------------------------------------
-    // FORM SETUP
-    // ------------------------------------------------------------
-    
     private void setupForm() {
 
-        // Load customers
+       
         customerComboBox.setItems(FXCollections.observableArrayList(dataController.getCustomers()));
         productComboBox.setItems(FXCollections.observableArrayList(dataController.getProducts()));
 
-        // Customer display format
         customerComboBox.setCellFactory(param -> new ListCell<Customer>() {
             @Override
             protected void updateItem(Customer c, boolean empty) {
@@ -71,7 +66,6 @@ public class CreateSalesOrderController {
             }
         });
 
-        // Product combo display
         productComboBox.setCellFactory(param -> new ListCell<Product>() {
             @Override
             protected void updateItem(Product product, boolean empty) {
@@ -114,11 +108,10 @@ public class CreateSalesOrderController {
             }
         });
 
-        // When product is selected → load available batches
         productComboBox.setOnAction(e -> loadBatchesForProduct());
     }
 
-// LOAD BATCHES FOR SELECTED PRODUCT
+
 @FXML
 private void loadBatchesForProduct() {
         Product p = productComboBox.getValue();
@@ -133,7 +126,7 @@ private void loadBatchesForProduct() {
         availableQtyLabel.setText("0");
         unitPriceField.clear();
 
-        // Load batch info on select
+      
         batchComboBox.setOnAction(e -> showBatchInfo());
     }
 
@@ -146,7 +139,6 @@ private void loadBatchesForProduct() {
         unitPriceField.setText(String.format("%.2f", batch.getProduct().getPrice()));
     }
 
-// ORDER LINE TABLE SETUP
 private void setupOrderLinesTable() {
         TableColumn<SalesOrderLine, String> productCol =
                 (TableColumn<SalesOrderLine, String>) orderLinesTable.getColumns().get(0);
@@ -181,7 +173,7 @@ private void setupOrderLinesTable() {
         subtotalCol.setCellValueFactory(c ->
                 new SimpleDoubleProperty(c.getValue().getQuantity()*c.getValue().getUnitPrice()).asObject());
 
-        // Remove button
+        
         actionCol.setCellValueFactory(c -> new SimpleStringProperty("Remove"));
         actionCol.setCellFactory(col -> new TableCell<SalesOrderLine, String>() {
             final Button btn = new Button("Remove");
@@ -207,7 +199,7 @@ private void setupOrderLinesTable() {
 
     }
 
-// ADD ORDER LINE
+
 @FXML
 private void addSalesOrderLine() {
         try {
@@ -276,7 +268,7 @@ private void addSalesOrderLine() {
         showStatus("Removed", "info");
 }
 
-// TOTAL
+
 private void updateTotal() {
     double total = orderLinesList.stream()
             .mapToDouble(SalesOrderLine::getSubTotal)
@@ -285,7 +277,6 @@ private void updateTotal() {
     totalAmountLabel.setText(String.format("Total: $%.2f", total));
 }
 
-// SAVE SALES ORDER
 
 @FXML
 private void toggleCustomerForm() {
@@ -324,7 +315,7 @@ private void saveNewCustomer() {
     customerComboBox.getItems().add(customer);
     customerComboBox.setValue(customer);
 
-    // Hide form
+    
     newCustomerBox.setVisible(false);
     customerNameField.clear();
     customerContactField.clear();

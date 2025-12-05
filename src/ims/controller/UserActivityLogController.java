@@ -41,4 +41,12 @@ public class UserActivityLogController {
         );
         logTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
+    @FXML
+    public void refreshTable() {
+    logTable.setItems(
+        FXCollections.observableArrayList(
+            DataController.getInstance().getUserActivityLogs()
+        )
+    );
+    }
 }

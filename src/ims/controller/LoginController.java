@@ -1,6 +1,5 @@
 package ims.controller;
 
-import ims.database.DatabaseConnection;
 import ims.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.net.URL;
-import java.sql.*;
 
 public class LoginController {
 
@@ -38,7 +36,6 @@ private void handleLogin(ActionEvent event) {
 
     DataController dc = DataController.getInstance();
 
-    // Validate from cached list, NOT database
     User user = dc.findUserByCredentials(username, password, role);
     
     if (user == null) {
@@ -46,16 +43,13 @@ private void handleLogin(ActionEvent event) {
         return;
     }
 
-    // Set as current user
     dc.setCurrentUser(user);
-
     User currentUser = dc.getCurrentUser();
     dc.logUserActivity(
 
     currentUser.getUserId(),
      "Logged into the system"
     );
-    // Continue to dashboard...
     loadDashboard(user.getRole());
     
 }

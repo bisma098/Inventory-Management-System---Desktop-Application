@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import ims.model.Supplier;
+import ims.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,6 +53,8 @@ public class AddSupplierController {
                 // Add to DataController list
                 Supplier supplier = new Supplier(newId, name, contactInfo);
                 DataController.getInstance().addSupplierToList(supplier);
+                User currentUser = DataController.getInstance().getCurrentUser();
+                DataController.getInstance().logUserActivity(currentUser.getUserId(),"User added Supplier "+supplier.getName());
             }
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

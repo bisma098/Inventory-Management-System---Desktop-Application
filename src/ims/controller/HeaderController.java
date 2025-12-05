@@ -1,5 +1,6 @@
 package ims.controller;
 
+import ims.database.DatabaseConnection;
 import ims.model.User;
 import ims.service.NotificationService;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ResourceBundle;
 
 public class HeaderController implements Initializable {
@@ -72,30 +75,30 @@ public class HeaderController implements Initializable {
         updateNotificationBadge();
     }
 
-    @FXML
-    private void openProfile() {
+   @FXML
+private void logout(ActionEvent event) {
+    try {
         User currentUser = DataController.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            Alert profile = new Alert(Alert.AlertType.INFORMATION);
-            profile.setTitle("Profile");
-            profile.setHeaderText("User Profile");
-            profile.setContentText("Username: " + currentUser.getUserName() + "\nRole: " + currentUser.getRole()+ "\nContact: " + currentUser.getContactInfo()+ "\nAddress: " + currentUser.getAddress());
-            profile.showAndWait();
-            DialogPane dialogPane = profile.getDialogPane();
-            dialogPane.setPrefSize(400, 300);
-        }
-    }
 
-    @FXML
-    private void logout(ActionEvent event) {
-        try {
-            DataController.getInstance().setCurrentUser(null);
-            Parent root = FXMLLoader.load(getClass().getResource("/ims/view/Login.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 1200, 700));
-            stage.setTitle("IMS - Login");
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Log logout activity
+        if (currentUser != null) {
+            DataController.getInstance().logUserActivity(currentUser.getUserId(), "User logged out" );
         }
+
+        // Clear current user
+        DataController.getInstance().setCurrentUser(null);
+
+        // Go back to login screen
+        Parent root = FXMLLoader.load(getClass().getResource("/ims/view/Login.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root, 1200, 700));
+        stage.setTitle("IMS - Login");
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
+
+
 }

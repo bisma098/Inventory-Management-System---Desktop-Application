@@ -27,8 +27,7 @@ public class InventoryController {
         updateStats();
     }
     
-    private void setupTable() {
-        // Create Columns
+private void setupTable() {
         TableColumn<Product, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("productId"));
         idCol.setPrefWidth(60);
@@ -67,7 +66,6 @@ public class InventoryController {
                     setText(null);
                 } else {
                     setText(quantity.toString());
-                    // Color coding for stock levels
                     if (quantity == 0) {
                         setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
                     } else if (quantity < 10) {
@@ -86,8 +84,6 @@ public class InventoryController {
         });
         categoryCol.setPrefWidth(120);
 
-
-        // Add columns to table
         productsTable.getColumns().addAll(idCol, nameCol, skuCol, priceCol, quantityCol, categoryCol);
 
         productsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -124,6 +120,4 @@ public class InventoryController {
     }
     
     
-
-
 }

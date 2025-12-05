@@ -1086,7 +1086,7 @@ public void updateProductQuantity(Product prod,int qty)
         stmt.setInt(2, prod.getProductId());
 
         stmt.executeUpdate();
-        evaluateStockNotification(prod);
+        evaluateStockNotification(prod);//****/
         } 
     catch (Exception e) {
         e.printStackTrace();
@@ -1094,7 +1094,7 @@ public void updateProductQuantity(Product prod,int qty)
 }
 
 public boolean saveCustomer(Customer customer) {
-    String sql = "INSERT INTO Customer (name, contact) VALUES (?, ?)";
+    String sql = "INSERT INTO Customer (name, contactInfo) VALUES (?, ?)";
 
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -1304,7 +1304,6 @@ public void addNotification(Notification notification) {
         ResultSet keys = stmt.getGeneratedKeys();
         if (keys.next()) notification.setId(keys.getInt(1));
 
-        // Add to list (if you maintain an in-memory list)
         this.notifications.add(notification);
         HeaderController.refreshNotifications();
 

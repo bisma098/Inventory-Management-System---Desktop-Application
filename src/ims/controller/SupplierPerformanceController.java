@@ -51,23 +51,35 @@ public class SupplierPerformanceController {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(
                 """
-                        SELECT 
+                      SELECT 
     s.supplierId,
     UPPER(s.name) AS SupplierName,
-    COUNT(DISTINCT po.orderId) AS TotalOrders,
-    ISNULL(SUM(po.totalAmount), 0) AS TotalSuppliedAmount,
-    ISNULL(SUM(sr.totalAmount), 0) AS TotalReturnedAmount,
-    ISNULL(SUM(po.totalAmount) - SUM(sr.totalAmount), 0) AS NetSuppliedAmount
+    ISNULL(poAgg.TotalOrders, 0) AS TotalOrders,
+    ISNULL(poAgg.TotalSuppliedAmount, 0) AS TotalSuppliedAmount,
+    ISNULL(srAgg.TotalReturnedAmount, 0) AS TotalReturnedAmount,
+    ISNULL(poAgg.TotalSuppliedAmount, 0) - ISNULL(srAgg.TotalReturnedAmount, 0) AS NetSuppliedAmount
 FROM Supplier s
-LEFT JOIN PurchaseOrder po 
-    ON s.supplierId = po.supplierId
-LEFT JOIN SupplierReturn sr 
-    ON s.supplierId = sr.supplierId
-GROUP BY 
-    s.supplierId,
-    UPPER(s.name)
-ORDER BY 
-    s.supplierId DESC;
+
+-- aggregate purchase order lines per supplier (join PurchaseOrder -> PurchaseOrderLine)
+LEFT JOIN (
+    SELECT p.supplierId,
+           COUNT(DISTINCT p.orderId) AS TotalOrders,
+           SUM(ISNULL(pol.linePrice,0)) AS TotalSuppliedAmount
+    FROM PurchaseOrder p
+    LEFT JOIN PurchaseOrderLine pol ON pol.orderId = p.orderId
+    GROUP BY p.supplierId
+) poAgg ON poAgg.supplierId = s.supplierId
+
+-- aggregate supplier returns
+LEFT JOIN (
+    SELECT supplierId,
+           SUM(ISNULL(totalAmount,0)) AS TotalReturnedAmount
+    FROM SupplierReturn
+    GROUP BY supplierId
+) srAgg ON srAgg.supplierId = s.supplierId
+
+ORDER BY s.supplierId DESC;
+
                         """
             );
 

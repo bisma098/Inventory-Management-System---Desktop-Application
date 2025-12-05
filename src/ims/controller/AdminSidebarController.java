@@ -18,8 +18,6 @@ public class AdminSidebarController {
     @FXML
     private Button btnInventory,btnReports, btnUserActivity,btnAuditLog,btnCategories,btnProductTracking,btnUsers;
 
-    // ================== EVENT HANDLERS ==================
-
     @FXML
     private void showInventory() {
         loadContent("/ims/view/Inventory.fxml");

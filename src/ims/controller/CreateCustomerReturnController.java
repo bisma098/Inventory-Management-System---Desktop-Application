@@ -12,20 +12,16 @@ import javafx.scene.layout.VBox;
 
 public class CreateCustomerReturnController {
 
-    // --- FORM FIELDS ---
     @FXML private ComboBox<Customer> customerComboBox;
     @FXML private ComboBox<SalesOrder> salesOrderComboBox;
     @FXML private ComboBox<SalesOrderLine> orderLineComboBox;
 
     @FXML private TextField reasonField;
 
-
-    // Display labels
     @FXML private Label batchLabel;
     @FXML private Label soldQtyLabel;
     @FXML private TextField returnQtyField;
 
-    // Return items table
     @FXML private TableView<CustomerReturnLine> returnLinesTable;
 
     @FXML private Label totalAmountLabel;
@@ -44,8 +40,6 @@ public class CreateCustomerReturnController {
     }
 
     private void setupForm() {
-
-        // Load customers
         customerComboBox.setItems(FXCollections.observableArrayList(dataController.getCustomers()));
 
         customerComboBox.setCellFactory(param -> new ListCell<>() {
@@ -110,8 +104,8 @@ public class CreateCustomerReturnController {
 }
 
         
-    @FXML
-    private void loadSalesOrders() {
+@FXML
+private void loadSalesOrders() {
         Customer c = customerComboBox.getValue();
         if (c == null) return;
 
@@ -127,8 +121,8 @@ public class CreateCustomerReturnController {
     }
 
 
-    @FXML
-    private void loadOrderLines() {
+@FXML
+private void loadOrderLines() {
         SalesOrder so = salesOrderComboBox.getValue();
         if (so == null) return;
 
@@ -138,26 +132,26 @@ public class CreateCustomerReturnController {
         clearLineForm();
 
         orderLineComboBox.setOnAction(e -> showSelectedItemInfo());
-    }
+}
 
 
-    private void showSelectedItemInfo() {
-        SalesOrderLine line = orderLineComboBox.getValue();
+private void showSelectedItemInfo() {
+SalesOrderLine line = orderLineComboBox.getValue();
         if (line == null) return;
 
         batchLabel.setText("Batch # " + line.getBatch().getBatchId());
         soldQtyLabel.setText(String.valueOf(line.getQuantity())); // sold quantity
-    }
+}
 
 
-    private void clearLineForm() {
+private void clearLineForm() {
         batchLabel.setText("-");
         soldQtyLabel.setText("0");
         returnQtyField.clear();
-    }
+}
 
 
-    private void setupReturnLinesTable() {
+private void setupReturnLinesTable() {
 
         TableColumn<CustomerReturnLine, String> productCol =
                 (TableColumn<CustomerReturnLine, String>) returnLinesTable.getColumns().get(0);
@@ -195,7 +189,6 @@ public class CreateCustomerReturnController {
                 ).asObject()
         );
 
-        // Remove button
         actionCol.setCellValueFactory(c -> new SimpleStringProperty("Remove"));
         actionCol.setCellFactory(col -> new TableCell<>() {
             final Button btn = new Button("Remove");
@@ -216,13 +209,13 @@ public class CreateCustomerReturnController {
         returnLinesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    // ADD RETURN LINE
-    @FXML
-    private void addReturnLine() {
-        try {
-            Customer c = customerComboBox.getValue();
-            SalesOrder so = salesOrderComboBox.getValue();
-            SalesOrderLine line = orderLineComboBox.getValue();
+
+@FXML
+private void addReturnLine() {
+    try {
+        Customer c = customerComboBox.getValue();
+        SalesOrder so = salesOrderComboBox.getValue();
+        SalesOrderLine line = orderLineComboBox.getValue();
 
             if (c == null || so == null || line == null) {
                 showStatus("Fill all required fields", "error");
@@ -240,14 +233,13 @@ public class CreateCustomerReturnController {
                 return;
             }
 
-            // Ensure same line is not added twice
-            boolean exists = returnLinesList.stream()
-                    .anyMatch(r -> r.getBatch().getBatchId() == line.getBatch().getBatchId());
+        boolean exists = returnLinesList.stream()
+                .anyMatch(r -> r.getBatch().getBatchId() == line.getBatch().getBatchId());
 
-            if (exists) {
-                showStatus("This item is already added to the return", "error");
-                return;
-            }
+        if (exists) {
+            showStatus("This item is already added to the return", "error");
+            return;
+        }
 
             CustomerReturnLine returnLine = new CustomerReturnLine();
             returnLine.setBatch(line.getBatch());
@@ -266,19 +258,19 @@ public class CreateCustomerReturnController {
         } catch (Exception e) {
             showStatus("Invalid quantity", "error");
         }
-    }
+}
 
 
-    private void removeReturnLine(CustomerReturnLine l) {
+private void removeReturnLine(CustomerReturnLine l) {
         returnLinesList.remove(l);
         updateTotal();
         showStatus("Removed", "info");
         if (returnLinesList.isEmpty()) {
             customerComboBox.setDisable(false);
         }
-    }
+}
 
-// TOTAL
+
 private void updateTotal() {
         double total = returnLinesList.stream()
                 .mapToDouble(l -> l.getQuantity() * l.getUnitPrice())
@@ -287,7 +279,7 @@ private void updateTotal() {
         totalAmountLabel.setText(String.format("Total: $%.2f", total));
 }
 
- // SAVE CUSTOMER RETURN
+
  @FXML
 private void createCustomerReturn() {
         try {
@@ -327,7 +319,7 @@ private void createCustomerReturn() {
             "Created Customer Return #" + cr.getReturnId() +" for Customer "+ cr.getCustomer().getName()
             );
 
-            // Restore stock
+     
             for (CustomerReturnLine line : cr.getReturnLines()) {
                 BatchLot batch = line.getBatch();
                 batch.addQuantity(line.getQuantity());
@@ -337,7 +329,6 @@ private void createCustomerReturn() {
                 p.addQuantity(line.getQuantity());
                 dataController.updateProductQuantity(p, line.getQuantity());
 
-                // Log inventory change for each product in the order
                         dataController.logInventoryChange(
                         currentUser.getUserId(),
                         line.getProduct().getProductId(),

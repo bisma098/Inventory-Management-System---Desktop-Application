@@ -79,7 +79,16 @@ public class AddUserController {
             );
 
             DataController.getInstance().addUser(newUser);
+DataController dc = DataController.getInstance();
+            User currentUser = dc.getCurrentUser();
 
+            if (currentUser != null) {
+                dc.logUserActivity(
+            currentUser.getUserId(),
+            "Created a new user: '" + txtUserName.getText() +
+            "' with Role '" + cbRole.getValue() + "'"
+            );
+        }
             // SUCCESS MESSAGE
             showAlert(Alert.AlertType.INFORMATION, "Success", "User created successfully!");
             

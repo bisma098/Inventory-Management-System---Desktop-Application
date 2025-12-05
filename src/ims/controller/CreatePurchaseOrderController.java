@@ -291,7 +291,6 @@ public class CreatePurchaseOrderController {
 @FXML
 private void createPurchaseOrder() {
     try {
-        // Validate
         if (supplierComboBox.getValue() == null) {
             showStatus("Please select a supplier", "error");
             return;

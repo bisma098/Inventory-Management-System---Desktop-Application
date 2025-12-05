@@ -1,7 +1,9 @@
+
 package ims.controller;
 
 import ims.database.DatabaseConnection;
 import ims.model.Category;
+import ims.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -71,7 +73,7 @@ public class AddCatController {
     // ===========================
     // ADD NEW CATEGORY BUTTON CLICK
     // ===========================
-    @FXML
+@FXML
 private void addCategory() {
     // Create a custom dialog
     Dialog<ButtonType> dialog = new Dialog<>();
@@ -115,7 +117,6 @@ private void addCategory() {
             return;
         }
 
-        // Find the next ID manually
         int nextId = 1; // default if table is empty
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -125,17 +126,23 @@ private void addCategory() {
                 nextId = rs.getInt("max_id") + 1;
             }
 
-            // Insert into DB with manual ID
             String insertQuery = "INSERT INTO categories(category_id, category_name, description) VALUES (?, ?, ?)";
             try (PreparedStatement pst = conn.prepareStatement(insertQuery)) {
                 pst.setInt(1, nextId);
                 pst.setString(2, name);
                 pst.setString(3, description);
                 pst.executeUpdate();
+            }
 
-                   // Add new category to DataController list
-                Category newCat = new Category(nextId, name);
-                DataController.getInstance().addCategoryToList(newCat);
+            // =======================
+            // LOG USER ACTIVITY HERE
+            // =======================
+            User currentUser = DataController.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                DataController.getInstance().logUserActivity(
+                        currentUser.getUserId(),
+                        "Added new Category '" + name + "' with ID #" + nextId
+                );
             }
 
         } catch (Exception e) {
@@ -151,7 +158,6 @@ private void addCategory() {
         loadCategoriesFromDB(); // Refresh TableView
     }
 }
-
 
     // ===========================
     // BACK BUTTON
